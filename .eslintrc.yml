@@ -1,0 +1,5 @@
+root: true
+plugins:
+  - seedco
+extends:
+  - plugin:seedco/node
