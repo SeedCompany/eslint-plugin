@@ -38,3 +38,9 @@ jobs:
 
       - name: Test
         run: yarn test
+
+      - name: Publish
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        uses: JS-DevTools/npm-publish@v1
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
