@@ -24,9 +24,6 @@ jobs:
         run: yarn install
         if: steps.yarn-cache.outputs.cache-hit != 'true'
 
-      - name: Install dependencies
-        run: yarn install
-
       - name: Check TypeScript
         run: yarn typecheck
 
