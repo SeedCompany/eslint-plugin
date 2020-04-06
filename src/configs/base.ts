@@ -121,6 +121,12 @@ export const config: Linter.Config = {
     // If we do re-enable I would consider with the option `checkArrowFunctions: false`
     '@typescript-eslint/promise-function-async': 'off',
     '@typescript-eslint/require-array-sort-compare': 'error',
+    // This importantly catches promises inside of try/catch/finally statements
+    // and is the only tool that enforces correct usage. It also removes awaits
+    // from returns for all other usages, which I would be ok ignoring but is
+    // not an option. I guess it's good for consistency and catching the
+    // missing await in try/catches is worth it.
+    '@typescript-eslint/return-await': 'error',
     '@typescript-eslint/restrict-plus-operands': 'error',
     '@typescript-eslint/switch-exhaustiveness-check': 'error',
     '@typescript-eslint/unified-signatures': 'error',
