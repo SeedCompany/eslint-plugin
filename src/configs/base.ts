@@ -116,7 +116,10 @@ export const config: Linter.Config = {
     // '@typescript-eslint/prefer-nullish-coalescing': 'warn', // TODO Research
     '@typescript-eslint/prefer-optional-chain': 'warn',
     '@typescript-eslint/prefer-readonly': 'warn',
-    '@typescript-eslint/promise-function-async': 'warn',
+    // This doesn't seem to add a lot of value, and is annoying with arrow functions
+    // common example: Promise.all(item => handle(item))
+    // If we do re-enable I would consider with the option `checkArrowFunctions: false`
+    '@typescript-eslint/promise-function-async': 'off',
     '@typescript-eslint/require-array-sort-compare': 'error',
     '@typescript-eslint/restrict-plus-operands': 'error',
     '@typescript-eslint/switch-exhaustiveness-check': 'error',
