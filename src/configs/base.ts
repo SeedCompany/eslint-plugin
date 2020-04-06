@@ -15,7 +15,7 @@ export const config: Linter.Config = {
     'import',
     'import-helpers',
     'prettier',
-    'seedco',
+    '@seedcompany',
   ],
   extends: [
     'eslint:recommended',

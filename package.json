@@ -1,5 +1,5 @@
 {
-  "name": "eslint-plugin-seedco",
+  "name": "@seedcompany/eslint-plugin",
   "version": "0.0.0",
   "description": "Seed Company's ESLint config / rules",
   "keywords": [
@@ -44,12 +44,12 @@
     "prettier": "^2.0.0"
   },
   "devDependencies": {
+    "@seedcompany/eslint-plugin": "*",
     "@types/eslint": "^6.1.9",
     "@types/jest": "^25.1.5",
     "@types/node": "^13.9.8",
     "@typescript-eslint/typescript-estree": "^2.26.0",
     "eslint": "^6.8.0",
-    "eslint-plugin-seedco": "*",
     "husky": "^4.2.3",
     "jest": "^25.2.7",
     "lint-staged": "^10.1.0",
@@ -60,6 +60,6 @@
     "typescript": "^3.8.3"
   },
   "resolutions": {
-    "eslint-plugin-seedco": "portal:."
+    "@seedcompany/eslint-plugin": "portal:."
   }
 }

@@ -5,7 +5,7 @@ import { Linter } from 'eslint';
  * The config for react projects
  */
 export const config: Linter.Config = {
-  extends: 'plugin:seedco/base',
+  extends: 'plugin:@seedcompany/base',
   env: {
     browser: true,
     commonjs: true,

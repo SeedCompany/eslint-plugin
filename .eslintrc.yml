@@ -1,5 +1,5 @@
 root: true
 plugins:
-  - seedco
+  - '@seedcompany'
 extends:
-  - plugin:seedco/node
+  - plugin:@seedcompany/node
