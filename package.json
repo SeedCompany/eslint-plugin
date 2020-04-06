@@ -17,6 +17,10 @@
   },
   "license": "MIT",
   "main": "dist/index.js",
+  "files": [
+    "src/**/*",
+    "dist/**/*"
+  ],
   "engines": {
     "node": ">=10"
   },
@@ -61,5 +65,8 @@
   },
   "resolutions": {
     "@seedcompany/eslint-plugin": "portal:."
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
