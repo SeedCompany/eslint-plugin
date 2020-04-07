@@ -170,7 +170,6 @@ export const config: Linter.Config = {
     'no-self-compare': 'warn',
     'no-sequences': 'warn',
     'no-template-curly-in-string': 'warn',
-    'no-throw-literal': 'warn',
     'no-useless-computed-key': 'warn',
     'no-useless-concat': 'warn',
     'no-useless-rename': 'warn',
