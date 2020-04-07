@@ -96,6 +96,7 @@ export const config: Linter.Config = {
       // should always be readonly.
       { accessibility: 'no-public' },
     ],
+    '@typescript-eslint/method-signature-style': 'error',
     '@typescript-eslint/no-extra-non-null-assertion': 'error',
     '@typescript-eslint/no-floating-promises': 'error',
     '@typescript-eslint/no-non-null-asserted-optional-chain': 'error',
