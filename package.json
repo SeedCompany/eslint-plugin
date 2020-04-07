@@ -31,8 +31,8 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@typescript-eslint/eslint-plugin": "^2.26.0",
-    "@typescript-eslint/experimental-utils": "^2.26.0",
+    "@typescript-eslint/eslint-plugin": "^2.27.0",
+    "@typescript-eslint/experimental-utils": "^2.27.0",
     "@typescript-eslint/parser": "^2.26.0",
     "confusing-browser-globals": "^1.0.9",
     "eslint-config-prettier": "^6.10.1",
@@ -49,7 +49,7 @@
   },
   "devDependencies": {
     "@seedcompany/eslint-plugin": "*",
-    "@types/eslint": "^6.1.9",
+    "@types/eslint": "^6.8.0",
     "@types/jest": "^25.1.5",
     "@types/node": "^13.9.8",
     "@typescript-eslint/typescript-estree": "^2.26.0",
