@@ -1,6 +1,10 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import type { RuleModule } from '@typescript-eslint/experimental-utils/dist/ts-eslint/Rule';
-import type { Node } from '@typescript-eslint/typescript-estree/dist/ts-estree/ts-estree';
+import { ImportDeclaration } from '@typescript-eslint/typescript-estree/dist/ts-estree/ts-estree';
+import type {
+  Node,
+  Program,
+} from '@typescript-eslint/typescript-estree/dist/ts-estree/ts-estree';
 
 import baseRule = require('eslint-plugin-react/lib/rules/react-in-jsx-scope');
 import pragmaUtil = require('eslint-plugin-react/lib/util/pragma');
@@ -29,8 +33,21 @@ export const rule: RuleModule<string, any[]> = {
           name: pragma,
         },
         fix: (fixer) => {
-          const token = context.getAncestors()[0];
-          return fixer.insertTextBefore(token, `import React from 'react';\n`);
+          const token = context.getAncestors()[0] as Program;
+          const existing = token.body.find(
+            (s) => isImportDeclaration(s) && s.source.value === 'react'
+          );
+          if (!existing) {
+            return fixer.insertTextBefore(
+              token,
+              `import React from 'react';\n`
+            );
+          }
+          const range = existing.range;
+          return fixer.replaceTextRange(
+            [range[0], range[0] + 6],
+            'import React,'
+          );
         },
       });
     }
@@ -41,3 +58,6 @@ export const rule: RuleModule<string, any[]> = {
     };
   },
 };
+
+const isImportDeclaration = (node: Node): node is ImportDeclaration =>
+  node.type === 'ImportDeclaration';

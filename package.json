@@ -1,6 +1,6 @@
 {
   "name": "@seedcompany/eslint-plugin",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Seed Company's ESLint config / rules",
   "keywords": [
     "eslint",

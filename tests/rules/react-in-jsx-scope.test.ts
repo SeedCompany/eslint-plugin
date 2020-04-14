@@ -34,5 +34,22 @@ export const Component = () => <div><div /></div>;
         },
       ],
     },
+    {
+      code: `
+import { FC } from 'react';
+export const Component: FC = () => <div />;
+`,
+      output: `
+import React, { FC } from 'react';
+export const Component: FC = () => <div />;
+`,
+      errors: [
+        {
+          messageId: 'notDefined',
+          line: 3,
+          column: 36,
+        },
+      ],
+    },
   ],
 });
