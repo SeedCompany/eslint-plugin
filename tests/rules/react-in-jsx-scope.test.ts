@@ -18,7 +18,7 @@ tester.run('@seedcompany/react-in-jsx-scope', rule, {
 export const Component = () => <div><div /></div>;
 `,
       output: `
-import React from 'react';
+import * as React from 'react';
 export const Component = () => <div><div /></div>;
 `,
       errors: [
@@ -40,7 +40,8 @@ import { FC } from 'react';
 export const Component: FC = () => <div />;
 `,
       output: `
-import React, { FC } from 'react';
+import * as React from 'react';
+import { FC } from 'react';
 export const Component: FC = () => <div />;
 `,
       errors: [

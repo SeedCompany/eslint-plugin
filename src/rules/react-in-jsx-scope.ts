@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import type { RuleModule } from '@typescript-eslint/experimental-utils/dist/ts-eslint/Rule';
-import { ImportDeclaration } from '@typescript-eslint/typescript-estree/dist/ts-estree/ts-estree';
 import type {
   Node,
   Program,
@@ -34,19 +33,9 @@ export const rule: RuleModule<string, any[]> = {
         },
         fix: (fixer) => {
           const token = context.getAncestors()[0] as Program;
-          const existing = token.body.find(
-            (s) => isImportDeclaration(s) && s.source.value === 'react'
-          );
-          if (!existing) {
-            return fixer.insertTextBefore(
-              token,
-              `import React from 'react';\n`
-            );
-          }
-          const range = existing.range;
-          return fixer.replaceTextRange(
-            [range[0], range[0] + 6],
-            'import React,'
+          return fixer.insertTextBefore(
+            token,
+            `import * as React from 'react';\n`
           );
         },
       });
@@ -58,6 +47,3 @@ export const rule: RuleModule<string, any[]> = {
     };
   },
 };
-
-const isImportDeclaration = (node: Node): node is ImportDeclaration =>
-  node.type === 'ImportDeclaration';
