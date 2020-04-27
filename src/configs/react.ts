@@ -94,4 +94,14 @@ export const config: Linter.Config = {
     'jsx-a11y/scope': 'warn',
     //endregion
   },
+  overrides: [
+    // Allow default export on storybook files
+    // https://storybook.js.org/docs/formats/component-story-format/
+    {
+      files: '*.stories.tsx',
+      rules: {
+        'import/no-default-export': 'off',
+      },
+    },
+  ],
 };

@@ -182,7 +182,7 @@ export const config: Linter.Config = {
     // TS handles errors, so these are just for styling
     'import/first': 'warn',
     'import/newline-after-import': 'warn',
-    // 'import/no-default-export': 'warn', // For the most part yes
+    'import/no-default-export': 'warn',
     'import/no-useless-path-segments': 'warn',
     'import/no-duplicates': 'warn',
     // Orders import statements
