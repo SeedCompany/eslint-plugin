@@ -98,7 +98,6 @@ export const config: Linter.Config = {
     ],
     '@typescript-eslint/method-signature-style': 'error',
     '@typescript-eslint/no-extra-non-null-assertion': 'error',
-    '@typescript-eslint/no-floating-promises': 'error',
     '@typescript-eslint/no-non-null-asserted-optional-chain': 'error',
     '@typescript-eslint/no-throw-literal': 'error',
     '@typescript-eslint/no-unused-expressions': [
