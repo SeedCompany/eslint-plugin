@@ -12,6 +12,7 @@ import type {
   Node,
   Token,
 } from '@typescript-eslint/types/dist/ts-estree';
+import { Mutable } from 'type-fest';
 
 type ImportSpecifier = ImportNamedSpecifier | ImportDefaultSpecifier;
 
@@ -21,9 +22,8 @@ export const noUnusedVars: RuleModule<string, any[]> = {
     fixable: 'code',
   },
   create(context) {
-    /* eslint-disable @typescript-eslint/unbound-method */
     const report = (descriptor: ReportDescriptor<string>) => {
-      const node = (descriptor as any).node as Node;
+      const node = ((descriptor as unknown) as { node?: Node }).node;
       if (!node) {
         return;
       }
@@ -35,7 +35,7 @@ export const noUnusedVars: RuleModule<string, any[]> = {
         return;
       }
 
-      descriptor.fix = (fixer) => {
+      (descriptor as Mutable<typeof descriptor>).fix = (fixer) => {
         if (isImportDeclaration(node)) {
           return fixer.remove(node);
         }
