@@ -651,7 +651,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": ^3.9.0
     "@typescript-eslint/experimental-utils": ^3.9.0
     "@typescript-eslint/parser": ^3.9.0
-    "@typescript-eslint/typescript-estree": ^3.9.0
+    "@typescript-eslint/types": ^3.9.0
     confusing-browser-globals: ^1.0.9
     eslint: ^7.6.0
     eslint-config-prettier: ^6.11.0
@@ -688,7 +688,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": ^3.9.0
     "@typescript-eslint/experimental-utils": ^3.9.0
     "@typescript-eslint/parser": ^3.9.0
-    "@typescript-eslint/typescript-estree": ^3.9.0
+    "@typescript-eslint/types": ^3.9.0
     confusing-browser-globals: ^1.0.9
     eslint: ^7.6.0
     eslint-config-prettier: ^6.11.0
@@ -978,14 +978,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/types@npm:3.9.0":
+"@typescript-eslint/types@npm:3.9.0, @typescript-eslint/types@npm:^3.9.0":
   version: 3.9.0
   resolution: "@typescript-eslint/types@npm:3.9.0"
   checksum: 2/32b52ccd65dd150a5ee962886fc3add7325b9595e65ffe99ed93954385b3ae0d0c7ca6878c82c7a6715891c674e4e196266f91fef7818d5b62e8b631ce3d2c8b
   languageName: node
   linkType: hard
 
-"@typescript-eslint/typescript-estree@npm:3.9.0, @typescript-eslint/typescript-estree@npm:^3.9.0":
+"@typescript-eslint/typescript-estree@npm:3.9.0":
   version: 3.9.0
   resolution: "@typescript-eslint/typescript-estree@npm:3.9.0"
   dependencies:

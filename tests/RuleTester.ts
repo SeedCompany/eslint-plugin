@@ -1,9 +1,7 @@
 import { ESLintUtils, TSESLint } from '@typescript-eslint/experimental-utils';
-import {
-  ParserOptions,
-  RuleTesterConfig,
-} from '@typescript-eslint/experimental-utils/dist/ts-eslint';
+import { RuleTesterConfig } from '@typescript-eslint/experimental-utils/dist/ts-eslint';
 import { clearCaches } from '@typescript-eslint/parser';
+import { ParserOptions } from '@typescript-eslint/types';
 import * as path from 'path';
 
 const parser = '@typescript-eslint/parser';

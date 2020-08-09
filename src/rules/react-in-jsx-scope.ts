@@ -1,9 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import type { RuleModule } from '@typescript-eslint/experimental-utils/dist/ts-eslint/Rule';
-import type {
-  Node,
-  Program,
-} from '@typescript-eslint/typescript-estree/dist/ts-estree/ts-estree';
+import type { Node, Program } from '@typescript-eslint/types/dist/ts-estree';
 
 import baseRule = require('eslint-plugin-react/lib/rules/react-in-jsx-scope');
 import pragmaUtil = require('eslint-plugin-react/lib/util/pragma');

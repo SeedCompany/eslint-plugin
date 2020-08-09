@@ -11,7 +11,7 @@ import type {
   ImportSpecifier as ImportNamedSpecifier,
   Node,
   Token,
-} from '@typescript-eslint/typescript-estree/dist/ts-estree/ts-estree';
+} from '@typescript-eslint/types/dist/ts-estree';
 
 type ImportSpecifier = ImportNamedSpecifier | ImportDefaultSpecifier;
 
