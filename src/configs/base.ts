@@ -1,3 +1,4 @@
+import restrictedGlobals from 'confusing-browser-globals';
 import { Linter } from 'eslint';
 
 /**
@@ -203,6 +204,7 @@ export const config: Linter.Config = {
     'no-new-object': 'warn',
     'no-new-wrappers': 'warn',
     'no-octal-escape': 'warn',
+    'no-restricted-globals': ['error', ...restrictedGlobals],
     'no-script-url': 'warn',
     'no-self-compare': 'warn',
     'no-sequences': 'warn',

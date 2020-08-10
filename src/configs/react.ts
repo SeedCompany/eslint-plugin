@@ -1,4 +1,3 @@
-import restrictedGlobals from 'confusing-browser-globals';
 import { Linter } from 'eslint';
 
 /**
@@ -20,7 +19,6 @@ export const config: Linter.Config = {
   },
   plugins: ['jsx-a11y', 'react', 'react-hooks'],
   rules: {
-    'no-restricted-globals': ['error', ...restrictedGlobals],
     'no-restricted-properties': [
       'error',
       ...['require.ensure', 'System.import']
