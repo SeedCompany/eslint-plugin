@@ -91,6 +91,15 @@ export const config: Linter.Config = {
     // These replace standard eslint rules to apply better to TS code.
     // This can be catching false positives using TS type info or handling special TS syntax.
 
+    'default-param-last': 'off',
+    '@typescript-eslint/default-param-last': ['error'],
+
+    'dot-notation': 'off',
+    '@typescript-eslint/dot-notation': 'error',
+
+    'no-loss-of-precision': 'off',
+    '@typescript-eslint/no-loss-of-precision': 'error',
+
     'no-unused-expressions': 'off',
     '@typescript-eslint/no-unused-expressions': [
       'warn',
@@ -129,21 +138,30 @@ export const config: Linter.Config = {
       { accessibility: 'no-public' },
     ],
     '@typescript-eslint/method-signature-style': 'error',
+    '@typescript-eslint/no-confusing-non-null-assertion': 'warn',
+    '@typescript-eslint/no-dynamic-delete': 'error',
     '@typescript-eslint/no-throw-literal': 'error',
+    '@typescript-eslint/no-unnecessary-boolean-literal-compare': 'warn',
+    '@typescript-eslint/no-unnecessary-condition': 'warn',
     '@typescript-eslint/no-unnecessary-qualifier': 'warn',
     '@typescript-eslint/no-unnecessary-type-arguments': 'warn',
+    '@typescript-eslint/prefer-enum-initializers': 'warn',
     '@typescript-eslint/prefer-for-of': 'error',
     '@typescript-eslint/prefer-function-type': 'error',
     '@typescript-eslint/prefer-includes': 'error',
+    '@typescript-eslint/prefer-literal-enum-member': 'error',
     // '@typescript-eslint/prefer-nullish-coalescing': 'warn', // TODO Research
     '@typescript-eslint/prefer-optional-chain': 'warn',
     '@typescript-eslint/prefer-readonly': 'warn',
+    // TODO Considering but it might be too invasive
+    // '@typescript-eslint/prefer-readonly-parameter-types': 'warn',
     '@typescript-eslint/prefer-string-starts-ends-with': 'error',
     // This doesn't seem to add a lot of value, and is annoying with arrow functions
     // common example: Promise.all(item => handle(item))
     // If we do re-enable I would consider with the option `checkArrowFunctions: false`
     '@typescript-eslint/promise-function-async': 'off',
     '@typescript-eslint/require-array-sort-compare': 'error',
+    // '@typescript-eslint/restrict-template-expressions': 'error', // TODO maybe
     // This importantly catches promises inside of try/catch/finally statements
     // and is the only tool that enforces correct usage. Enabled "always" option
     // to ensure that call site is captured in stack traces.
