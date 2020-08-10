@@ -214,6 +214,22 @@ export const config: Linter.Config = {
     'unicode-bom': ['warn', 'never'],
     // endregion
 
+    // region Others
+    'no-restricted-syntax': [
+      'error',
+      {
+        selector: 'ForStatement',
+        message: 'Use a for..of loop instead. They are more concise.',
+      },
+      {
+        selector: 'ForInStatement',
+        message:
+          'for..in loops iterate over the entire prototype chain, which is virtually never what you want.\n ' +
+          'Use Object.{keys,values,entries}, and iterate over the resulting array with a for..of loop.',
+      },
+    ],
+    // endregion
+
     // region Import/Export rules
     // TS handles errors, so these are just for styling
     'import/first': 'warn',
