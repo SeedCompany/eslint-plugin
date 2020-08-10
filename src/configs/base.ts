@@ -58,7 +58,7 @@ export const config: Linter.Config = {
 
     // region recommended rules - loosening
     // Allow return types to be inferred
-    '@typescript-eslint/explicit-function-return-type': 'off',
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
     // This is too invasive. Usage is discouraged though.
     '@typescript-eslint/no-explicit-any': 'off',
     // Loosen because we are still smarter than the compiler sometimes
