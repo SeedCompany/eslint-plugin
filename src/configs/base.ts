@@ -89,8 +89,6 @@ export const config: Linter.Config = {
       { accessibility: 'no-public' },
     ],
     '@typescript-eslint/method-signature-style': 'error',
-    '@typescript-eslint/no-extra-non-null-assertion': 'error',
-    '@typescript-eslint/no-non-null-asserted-optional-chain': 'error',
     '@typescript-eslint/no-throw-literal': 'error',
     '@typescript-eslint/no-unused-expressions': [
       'warn',
