@@ -28,13 +28,6 @@ export const config: Linter.Config = {
     // region typescript-eslint
 
     // region recommended rules - deprecated
-    '@typescript-eslint/ban-ts-ignore': 'off',
-    '@typescript-eslint/ban-ts-comment': 'error',
-
-    '@typescript-eslint/camelcase': 'off',
-    '@typescript-eslint/class-name-casing': 'off',
-    '@typescript-eslint/interface-name-prefix': 'off',
-    '@typescript-eslint/naming-convention': 'off', // TODO
     // endregion
 
     // region recommended rules - tweaks
