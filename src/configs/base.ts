@@ -32,6 +32,13 @@ export const config: Linter.Config = {
 
     // region recommended rules - tweaks
 
+    '@typescript-eslint/restrict-plus-operands': [
+      'error',
+      {
+        // I think this will be default in v4 (they considered it a BC break)
+        checkCompoundAssignments: true,
+      },
+    ],
     '@typescript-eslint/ban-ts-comment': [
       'error',
       {
