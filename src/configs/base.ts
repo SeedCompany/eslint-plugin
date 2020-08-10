@@ -104,9 +104,11 @@ export const config: Linter.Config = {
     '@typescript-eslint/no-unnecessary-type-arguments': 'warn',
     '@typescript-eslint/prefer-for-of': 'error',
     '@typescript-eslint/prefer-function-type': 'error',
+    '@typescript-eslint/prefer-includes': 'error',
     // '@typescript-eslint/prefer-nullish-coalescing': 'warn', // TODO Research
     '@typescript-eslint/prefer-optional-chain': 'warn',
     '@typescript-eslint/prefer-readonly': 'warn',
+    '@typescript-eslint/prefer-string-starts-ends-with': 'error',
     // This doesn't seem to add a lot of value, and is annoying with arrow functions
     // common example: Promise.all(item => handle(item))
     // If we do re-enable I would consider with the option `checkArrowFunctions: false`
