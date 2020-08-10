@@ -135,11 +135,9 @@ export const config: Linter.Config = {
     '@typescript-eslint/promise-function-async': 'off',
     '@typescript-eslint/require-array-sort-compare': 'error',
     // This importantly catches promises inside of try/catch/finally statements
-    // and is the only tool that enforces correct usage. It also removes awaits
-    // from returns for all other usages, which I would be ok ignoring but is
-    // not an option. I guess it's good for consistency and catching the
-    // missing await in try/catches is worth it.
-    '@typescript-eslint/return-await': 'error',
+    // and is the only tool that enforces correct usage. Enabled "always" option
+    // to ensure that call site is captured in stack traces.
+    '@typescript-eslint/return-await': ['error', 'always'],
     '@typescript-eslint/switch-exhaustiveness-check': 'error',
     '@typescript-eslint/unified-signatures': 'error',
     // endregion
