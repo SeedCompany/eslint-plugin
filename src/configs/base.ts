@@ -120,7 +120,6 @@ export const config: Linter.Config = {
     // not an option. I guess it's good for consistency and catching the
     // missing await in try/catches is worth it.
     '@typescript-eslint/return-await': 'error',
-    '@typescript-eslint/restrict-plus-operands': 'error',
     '@typescript-eslint/switch-exhaustiveness-check': 'error',
     '@typescript-eslint/unified-signatures': 'error',
     // endregion
