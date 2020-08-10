@@ -39,11 +39,6 @@ export const config: Linter.Config = {
         objectLiteralTypeAssertions: 'never',
       },
     ],
-    '@typescript-eslint/no-use-before-define': [
-      'error',
-      // This disallows referencing before declaration (stricter, not looser)
-      { functions: false, classes: false, variables: false, typedefs: false },
-    ],
     // Replacing with our own
     '@typescript-eslint/no-unused-vars': 'off',
     '@seedcompany/no-unused-vars': [
@@ -72,6 +67,21 @@ export const config: Linter.Config = {
     // We are defining the contract and setting up usages to be async which
     // requires design work. async code could come later.
     '@typescript-eslint/require-await': 'off',
+    // endregion
+
+    // region extension rules
+    // https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/eslint-plugin#extension-rules
+    // These replace standard eslint rules to apply better to TS code.
+    // This can be catching false positives using TS type info or handling special TS syntax.
+
+    // Revisit with ts-eslint v4 which has new code for scope management
+    'no-use-before-define': 'off',
+    '@typescript-eslint/no-use-before-define': [
+      'error',
+      // This disallows referencing before declaration (stricter, not looser)
+      { functions: false, classes: false, variables: false, typedefs: false },
+    ],
+
     // endregion
 
     // region other rules
