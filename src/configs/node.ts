@@ -5,8 +5,5 @@ import { Linter } from 'eslint';
  */
 export const config: Linter.Config = {
   extends: 'plugin:@seedcompany/base',
-  rules: {
-    // Server side code should never have floating promises
-    '@typescript-eslint/no-floating-promises': 'error',
-  },
+  rules: {},
 };
