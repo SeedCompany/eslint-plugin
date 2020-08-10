@@ -138,7 +138,6 @@ export const config: Linter.Config = {
     'no-extend-native': 'warn',
     'no-extra-bind': 'warn',
     'no-extra-label': 'warn',
-    'no-implied-eval': 'warn',
     'no-labels': 'warn',
     'no-lone-blocks': 'warn',
     'no-loop-func': 'warn',
