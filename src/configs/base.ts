@@ -91,6 +91,16 @@ export const config: Linter.Config = {
     // These replace standard eslint rules to apply better to TS code.
     // This can be catching false positives using TS type info or handling special TS syntax.
 
+    'no-unused-expressions': 'off',
+    '@typescript-eslint/no-unused-expressions': [
+      'warn',
+      {
+        allowShortCircuit: true,
+        allowTernary: true,
+        allowTaggedTemplates: true,
+      },
+    ],
+
     // Revisit with ts-eslint v4 which has new code for scope management
     'no-use-before-define': 'off',
     '@typescript-eslint/no-use-before-define': [
@@ -98,6 +108,9 @@ export const config: Linter.Config = {
       // This disallows referencing before declaration (stricter, not looser)
       { functions: false, classes: false, variables: false, typedefs: false },
     ],
+
+    'no-useless-constructor': 'off', // replace with TS version
+    '@typescript-eslint/no-useless-constructor': 'error',
 
     // endregion
 
@@ -117,16 +130,6 @@ export const config: Linter.Config = {
     ],
     '@typescript-eslint/method-signature-style': 'error',
     '@typescript-eslint/no-throw-literal': 'error',
-    '@typescript-eslint/no-unused-expressions': [
-      'warn',
-      {
-        allowShortCircuit: true,
-        allowTernary: true,
-        allowTaggedTemplates: true,
-      },
-    ],
-    'no-useless-constructor': 'off', // replace with TS version
-    '@typescript-eslint/no-useless-constructor': 'error',
     '@typescript-eslint/no-unnecessary-qualifier': 'warn',
     '@typescript-eslint/no-unnecessary-type-arguments': 'warn',
     '@typescript-eslint/prefer-for-of': 'error',
