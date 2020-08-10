@@ -215,6 +215,7 @@ export const config: Linter.Config = {
     // endregion
 
     // region Others
+    'no-lonely-if': 'error',
     'no-restricted-syntax': [
       'error',
       {
@@ -228,6 +229,16 @@ export const config: Linter.Config = {
           'Use Object.{keys,values,entries}, and iterate over the resulting array with a for..of loop.',
       },
     ],
+    'no-trailing-spaces': [
+      'error',
+      {
+        skipBlankLines: false,
+        ignoreComments: false,
+      },
+    ],
+    'one-var': ['error', 'never'],
+    'operator-assignment': 'error',
+    'prefer-exponentiation-operator': 'error',
     // endregion
 
     // region Import/Export rules
