@@ -1,10 +1,9 @@
 import { ESLintUtils, TSESLint } from '@typescript-eslint/experimental-utils';
-import {
-  ParserOptions,
-  RuleTesterConfig,
-} from '@typescript-eslint/experimental-utils/dist/ts-eslint';
+import { RuleTesterConfig } from '@typescript-eslint/experimental-utils/dist/ts-eslint';
 import { clearCaches } from '@typescript-eslint/parser';
+import { ParserOptions } from '@typescript-eslint/types';
 import * as path from 'path';
+import { Mutable } from 'type-fest';
 
 const parser = '@typescript-eslint/parser';
 
@@ -31,9 +30,7 @@ export class RuleTester extends TSESLint.RuleTester {
 
   private getFilename(options?: ParserOptions): string {
     if (options) {
-      const filename = `file.ts${
-        options.ecmaFeatures && options.ecmaFeatures.jsx ? 'x' : ''
-      }`;
+      const filename = `file.ts${options.ecmaFeatures?.jsx ? 'x' : ''}`;
       if (options.project) {
         return path.join(getFixturesRootDir(), filename);
       }
@@ -57,7 +54,7 @@ export class RuleTester extends TSESLint.RuleTester {
     const errorMessage = `Do not set the parser at the test level unless you want to use a parser other than ${parser}`;
 
     // standardize the valid tests as objects
-    tests.valid = tests.valid.map((test) => {
+    (tests as Mutable<typeof tests>).valid = tests.valid.map((test) => {
       if (typeof test === 'string') {
         return {
           code: test,
@@ -72,7 +69,9 @@ export class RuleTester extends TSESLint.RuleTester {
           throw new Error(errorMessage);
         }
         if (!test.filename) {
-          test.filename = this.getFilename(test.parserOptions);
+          (test as Mutable<typeof test>).filename = this.getFilename(
+            test.parserOptions
+          );
         }
       }
     });
@@ -81,7 +80,9 @@ export class RuleTester extends TSESLint.RuleTester {
         throw new Error(errorMessage);
       }
       if (!test.filename) {
-        test.filename = this.getFilename(test.parserOptions);
+        (test as Mutable<typeof test>).filename = this.getFilename(
+          test.parserOptions
+        );
       }
     });
 

@@ -1,14 +1,13 @@
-import { CLIEngine } from 'eslint';
+import { ESLint } from 'eslint';
 import * as configs from '../src/configs';
 
-test.each(Object.entries(configs))('%s', (name, config) => {
-  const engine = new CLIEngine({
+test.each(Object.entries(configs))('%s', async (name, config) => {
+  const linter = new ESLint({
     baseConfig: config,
     useEslintrc: false,
     cwd: __dirname,
   });
-  const result = engine.executeOnFiles([`../src/configs/${name}.ts`]);
-  expect(result.results).toHaveLength(1);
-  expect(result.results[0].messages.map((m) => m.message)).toEqual([]);
-  expect(result.usedDeprecatedRules).toHaveLength(0);
+  const [results] = await linter.lintFiles([`../src/configs/${name}.ts`]);
+  expect(results.messages.map((m) => m.message)).toEqual([]);
+  expect(results.usedDeprecatedRules).toHaveLength(0);
 });
