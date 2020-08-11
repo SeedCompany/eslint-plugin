@@ -79,6 +79,13 @@ export const config: Linter.Config = {
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     // This is too invasive. Usage is discouraged though.
     '@typescript-eslint/no-explicit-any': 'off',
+    // These 4 rules prevent `as any` from being used.
+    // I would love to enable them at some point, but I think they need to be
+    // opt-in for now.
+    '@typescript-eslint/no-unsafe-assignment': 'off',
+    '@typescript-eslint/no-unsafe-call': 'off',
+    '@typescript-eslint/no-unsafe-member-access': 'off',
+    '@typescript-eslint/no-unsafe-return': 'off',
     // Loosen because we are still smarter than the compiler sometimes
     '@typescript-eslint/no-non-null-assertion': 'off',
     // I think we should be able to define async functions without using await.
