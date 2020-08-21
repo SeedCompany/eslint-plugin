@@ -239,7 +239,7 @@ export const config: Linter.Config = {
       },
     ],
     'no-trailing-spaces': [
-      'error',
+      'warn',
       {
         skipBlankLines: false,
         ignoreComments: false,
