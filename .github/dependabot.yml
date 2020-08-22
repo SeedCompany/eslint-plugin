@@ -5,7 +5,7 @@ updates:
     directory: /
     schedule:
       interval: daily
-      time: 09:00
+      time: '09:00'
       timezone: America/Chicago
     allow:
       - dependency-type: production
