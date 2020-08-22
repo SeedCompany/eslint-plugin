@@ -38,6 +38,7 @@ jobs:
 
       - name: Publish
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-        uses: JS-DevTools/npm-publish@v1
-        with:
-          token: ${{ secrets.NPM_TOKEN }}
+        run: yarn semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
