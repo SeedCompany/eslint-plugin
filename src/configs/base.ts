@@ -148,6 +148,7 @@ export const config: Linter.Config = {
     '@typescript-eslint/method-signature-style': 'error',
     '@typescript-eslint/no-confusing-non-null-assertion': 'warn',
     '@typescript-eslint/no-dynamic-delete': 'error',
+    '@typescript-eslint/no-require-imports': 'error',
     '@typescript-eslint/no-throw-literal': 'error',
     '@typescript-eslint/no-unnecessary-boolean-literal-compare': 'warn',
     '@typescript-eslint/no-unnecessary-condition': 'warn',
@@ -224,6 +225,7 @@ export const config: Linter.Config = {
     // endregion
 
     // region Others
+    'array-callback-return': 'error',
     'no-lonely-if': 'error',
     'no-restricted-syntax': [
       'error',
@@ -239,7 +241,7 @@ export const config: Linter.Config = {
       },
     ],
     'no-trailing-spaces': [
-      'error',
+      'warn',
       {
         skipBlankLines: false,
         ignoreComments: false,

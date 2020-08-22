@@ -1,10 +1,8 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 import type { RuleModule } from '@typescript-eslint/experimental-utils/dist/ts-eslint/Rule';
 import type { Node, Program } from '@typescript-eslint/types/dist/ts-estree';
-
-import baseRule = require('eslint-plugin-react/lib/rules/react-in-jsx-scope');
-import pragmaUtil = require('eslint-plugin-react/lib/util/pragma');
-import variableUtil = require('eslint-plugin-react/lib/util/variable');
+import baseRule from 'eslint-plugin-react/lib/rules/react-in-jsx-scope';
+import pragmaUtil from 'eslint-plugin-react/lib/util/pragma';
+import variableUtil from 'eslint-plugin-react/lib/util/variable';
 
 export const rule: RuleModule<string, any[]> = {
   meta: {
