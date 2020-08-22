@@ -1025,7 +1025,7 @@ __metadata:
     eslint-plugin-jsx-a11y: ^6.3.1
     eslint-plugin-prettier: ^3.1.4
     eslint-plugin-react: ^7.20.5
-    eslint-plugin-react-hooks: ^4.0.8
+    eslint-plugin-react-hooks: ^4.1.0
     husky: ^4.2.5
     jest: ^26.3.0
     jest-circus: ^26.3.0
@@ -1066,7 +1066,7 @@ __metadata:
     eslint-plugin-jsx-a11y: ^6.3.1
     eslint-plugin-prettier: ^3.1.4
     eslint-plugin-react: ^7.20.5
-    eslint-plugin-react-hooks: ^4.0.8
+    eslint-plugin-react-hooks: ^4.1.0
     husky: ^4.2.5
     jest: ^26.3.0
     jest-circus: ^26.3.0
@@ -3715,12 +3715,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-react-hooks@npm:^4.0.8":
-  version: 4.0.8
-  resolution: "eslint-plugin-react-hooks@npm:4.0.8"
+"eslint-plugin-react-hooks@npm:^4.1.0":
+  version: 4.1.0
+  resolution: "eslint-plugin-react-hooks@npm:4.1.0"
   peerDependencies:
     eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0
-  checksum: 2/6e6ce44f1f5981fd07d921bf4e2142183a2670bbd51d7fd41c2ae9b8f117b5c8da8bb6b4db2d092e29e698b026987ead53634e5a4d308a67c32e5127ab7fa73f
+  checksum: 2/7ef1a971b2eb499cdad118f6b6d504e22e2e46bec6a815dd4c4eae0d8db7fe8a6cbbdd5e6dd94f44a7a09fad61e92e44c8dc0fe0de6ec56356bea9414d2e258a
   languageName: node
   linkType: hard
 
