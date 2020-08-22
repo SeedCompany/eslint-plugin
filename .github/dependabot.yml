@@ -10,3 +10,5 @@ updates:
     allow:
       - dependency-type: production
     versioning-strategy: increase
+    commit-message:
+      prefix: 'chore:'
