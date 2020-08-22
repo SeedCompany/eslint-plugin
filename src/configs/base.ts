@@ -225,6 +225,7 @@ export const config: Linter.Config = {
     // endregion
 
     // region Others
+    'array-callback-return': 'error',
     'no-lonely-if': 'error',
     'no-restricted-syntax': [
       'error',
