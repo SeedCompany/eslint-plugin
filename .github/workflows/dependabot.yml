@@ -7,11 +7,13 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    if: github.actor == 'dependabot[bot]'
 
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 2
+          persist-credentials: false
       - name: Use Node.js 12.x
         uses: actions/setup-node@v1
         with:
@@ -29,6 +31,17 @@ jobs:
           git checkout HEAD -- package.json
 
           yarn install
+
+          yarn deduplicate
+
+      - name: Config Git
+        run: |
+          # use personal access token to allow triggering new workflow
+          BASIC_AUTH=$(echo -n "x-access-token:${{ secrets.GH_TOKEN }}" | base64)
+          echo "::add-mask::$BASIC_AUTH"
+          git config --global user.name '${{ github.event.commits[0].author.name }}'
+          git config --global user.email '${{ github.event.commits[0].author.email }}'
+          git config --local http.$GITHUB_SERVER_URL/.extraheader "AUTHORIZATION: basic $BASIC_AUTH"
 
       - name: Commit changes
         run: |
