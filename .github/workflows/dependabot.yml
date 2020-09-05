@@ -42,7 +42,11 @@ jobs:
           git config --global user.email '${{ github.event.commits[0].author.email }}'
           git config --local http.$GITHUB_SERVER_URL/.extraheader "AUTHORIZATION: basic $BASIC_AUTH"
 
+      - name: Check for changes
+        run: git diff --quiet --exit-code # check for un-staged changes
+
       - name: Commit changes
+        if: ${{ failure() }} # If there are changes, continue
         run: |
           git add yarn.lock
           git config --global user.name 'dependabot[bot]'
