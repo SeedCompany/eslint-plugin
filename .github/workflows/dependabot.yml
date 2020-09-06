@@ -33,6 +33,8 @@ jobs:
 
           yarn deduplicate
 
+          git add yarn.lock
+
       - name: Config Git
         run: |
           # use personal access token to allow triggering new workflow
@@ -42,13 +44,15 @@ jobs:
           git config --global user.email '${{ github.event.commits[0].author.email }}'
           git config --local http.$GITHUB_SERVER_URL/.extraheader "AUTHORIZATION: basic $BASIC_AUTH"
 
-      - name: Are there changes to be made?
-        run: git update-index --refresh; git diff-index --quiet # check for uncommitted changes
+      - name: Check for changes
+        id: changes
+        run: |
+          git update-index --refresh || true
+          echo "::set-output name=changes::$(git diff-index HEAD)"
 
       - name: Commit changes
-        if: ${{ failure() }} # If there are changes, continue
+        if: steps.changes.outputs.changes # If there are changes, continue
         run: |
-          git add yarn.lock
           git config --global user.name 'dependabot[bot]'
           git config --global user.email '49699333+dependabot[bot]@users.noreply.github.com'
           git commit --amend --no-edit
