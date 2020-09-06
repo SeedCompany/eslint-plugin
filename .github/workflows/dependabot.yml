@@ -42,8 +42,8 @@ jobs:
           git config --global user.email '${{ github.event.commits[0].author.email }}'
           git config --local http.$GITHUB_SERVER_URL/.extraheader "AUTHORIZATION: basic $BASIC_AUTH"
 
-      - name: Check for changes
-        run: git diff --quiet --exit-code # check for un-staged changes
+      - name: Are there changes to be made?
+        run: git update-index --refresh; git diff-index --quiet # check for uncommitted changes
 
       - name: Commit changes
         if: ${{ failure() }} # If there are changes, continue
