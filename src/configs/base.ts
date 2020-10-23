@@ -43,7 +43,6 @@ export const config: Linter.Config = {
     '@typescript-eslint/ban-ts-comment': [
       'error',
       {
-        'ts-expect-error': 'allow-with-description', // default in v4
         // enforce an actual comment instead of just a few chars
         minimumDescriptionLength: 20, // default 3
       },
