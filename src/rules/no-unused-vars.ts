@@ -1,4 +1,4 @@
-import baseRule from '@typescript-eslint/eslint-plugin/dist/rules/no-unused-vars-experimental';
+import baseRule from '@typescript-eslint/eslint-plugin/dist/rules/no-unused-vars';
 import {
   ReportDescriptor,
   RuleModule,
@@ -77,12 +77,13 @@ export const noUnusedVars: RuleModule<string, any[]> = {
       context.report(descriptor);
     };
 
-    return baseRule.create({
-      ...context,
-      options: context.options,
-      parserServices: context.parserServices,
-      report,
+    const contextForBaseRule = Object.create(context, {
+      report: {
+        value: report,
+        writable: false,
+      },
     });
+    return baseRule.create(contextForBaseRule);
   },
 };
 
