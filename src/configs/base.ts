@@ -58,7 +58,15 @@ export const config: Linter.Config = {
     ],
     // Replacing with our own
     '@typescript-eslint/no-unused-vars': 'off',
-    '@seedcompany/no-unused-vars': 'warn',
+    '@seedcompany/no-unused-vars': [
+      'warn',
+      {
+        args: 'after-used',
+        ignoreRestSiblings: true,
+        argsIgnorePattern: '^_',
+        varsIgnorePattern: '^_',
+      },
+    ],
     '@typescript-eslint/unbound-method': [
       'error',
       // We'll assume statics don't need scope, so don't need to be bound
