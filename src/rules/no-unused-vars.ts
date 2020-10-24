@@ -58,16 +58,22 @@ export const noUnusedVars: RuleModule<string, any[]> = {
           );
         }
 
-        // Import is only named import following a default import
-        // ex. "import default, { unused } from 'module';"
+        // Import is the only named import...
         if (imports.filter(isNamedImportSpecifier).length === 1) {
-          return removeBetween(
-            sourceCode.getTokenBefore(unusedImport, isComma),
-            sourceCode.getTokenAfter(unusedImport, isClosingBracket)
-          );
+          // ...following a default import
+          // ex. "import default, { unused } from 'module';"
+          if (imports.some(isDefaultImportSpecifier)) {
+            return removeBetween(
+              sourceCode.getTokenBefore(unusedImport, isComma),
+              sourceCode.getTokenAfter(unusedImport, isClosingBracket)
+            );
+          }
+          // ...in the declaration
+          // ex. "import { unused } from 'module';"
+          return fixer.remove(declaration);
         }
 
-        // Import is last, remove it and the comma before it
+        // Import is last following another, remove it and the comma before it
         return removeBetween(
           sourceCode.getTokenBefore(unusedImport, isComma),
           unusedImport
