@@ -43,7 +43,6 @@ export const config: Linter.Config = {
     '@typescript-eslint/ban-ts-comment': [
       'error',
       {
-        'ts-expect-error': 'allow-with-description', // default in v4
         // enforce an actual comment instead of just a few chars
         minimumDescriptionLength: 20, // default 3
       },
@@ -59,12 +58,7 @@ export const config: Linter.Config = {
     ],
     // Replacing with our own
     '@typescript-eslint/no-unused-vars': 'off',
-    '@seedcompany/no-unused-vars': [
-      'warn',
-      {
-        ignoreArgsIfArgsAfterAreUsed: true,
-      },
-    ],
+    '@seedcompany/no-unused-vars': 'warn',
     '@typescript-eslint/unbound-method': [
       'error',
       // We'll assume statics don't need scope, so don't need to be bound
