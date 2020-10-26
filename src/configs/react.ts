@@ -67,7 +67,6 @@ export const config: Linter.Config = {
     //endregion
 
     //region JSX A11y
-    'jsx-a11y/accessible-emoji': 'warn',
     'jsx-a11y/alt-text': 'warn',
     'jsx-a11y/anchor-has-content': 'warn',
     'jsx-a11y/anchor-is-valid': [
