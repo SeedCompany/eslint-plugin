@@ -58,6 +58,12 @@ export const noUnusedVars: RuleModule<string, any[]> = {
           );
         }
 
+        // Import is a single default import
+        // ex. "import module from 'module';"
+        if (isDefaultImportSpecifier(unusedImport) && imports.length === 1) {
+          return fixer.remove(declaration);
+        }
+
         // Import is the only named import...
         if (imports.filter(isNamedImportSpecifier).length === 1) {
           // ...following a default import
