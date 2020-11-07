@@ -9,6 +9,7 @@ import type {
   ImportDeclaration,
   ImportDefaultSpecifier,
   ImportSpecifier as ImportNamedSpecifier,
+  ImportNamespaceSpecifier,
   Node,
   Token,
 } from '@typescript-eslint/types/dist/ts-estree';
@@ -27,19 +28,12 @@ export const noUnusedVars: RuleModule<string, any[]> = {
       if (!node) {
         return;
       }
-      if (
-        !isImportDeclaration(node) &&
-        (!node.parent || !isImportSpecifier(node.parent))
-      ) {
+      if (!node.parent || !isImportSpecifier(node.parent)) {
         context.report(descriptor);
         return;
       }
 
       (descriptor as Mutable<typeof descriptor>).fix = (fixer) => {
-        if (isImportDeclaration(node)) {
-          return fixer.remove(node);
-        }
-
         const sourceCode = context.getSourceCode();
         const unusedImport = node.parent as ImportSpecifier;
         const declaration = unusedImport.parent as ImportDeclaration;
@@ -49,6 +43,11 @@ export const noUnusedVars: RuleModule<string, any[]> = {
           start && end
             ? fixer.removeRange([start.range[0], end.range[1]])
             : null;
+
+        // ex. "import * as unused from 'module';"
+        if (isNamespaceImportSpecifier(unusedImport)) {
+          return fixer.remove(declaration);
+        }
 
         // Import is not last, remove it and the following comma
         if (unusedImport !== imports[imports.length - 1]) {
@@ -99,11 +98,14 @@ export const noUnusedVars: RuleModule<string, any[]> = {
   },
 };
 
-const isImportDeclaration = (node: Node): node is ImportDeclaration =>
-  node.type === 'ImportDeclaration';
-
 const isImportSpecifier = (node: Node) =>
-  isNamedImportSpecifier(node) || isDefaultImportSpecifier(node);
+  isNamedImportSpecifier(node) ||
+  isDefaultImportSpecifier(node) ||
+  isNamespaceImportSpecifier(node);
+
+const isNamespaceImportSpecifier = (
+  node: Node
+): node is ImportNamespaceSpecifier => node.type === 'ImportNamespaceSpecifier';
 
 const isNamedImportSpecifier = (node: Node): node is ImportSpecifier =>
   node.type === 'ImportSpecifier';
