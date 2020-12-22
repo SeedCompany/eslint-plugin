@@ -995,9 +995,9 @@ __metadata:
     "@commitlint/config-conventional": ^11.0.0
     "@commitlint/prompt-cli": ^11.0.0
     "@seedcompany/eslint-plugin": "*"
-    "@types/eslint": ^7.2.4
+    "@types/eslint": ^7.2.6
     "@types/jest": ^26.0.15
-    "@types/node": ^14.14.2
+    "@types/node": ^14.14.14
     "@typescript-eslint/eslint-plugin": ^4.11.0
     "@typescript-eslint/experimental-utils": ^4.11.0
     "@typescript-eslint/parser": ^4.11.0
@@ -1007,21 +1007,21 @@ __metadata:
     eslint-config-prettier: ^7.1.0
     eslint-plugin-import: ^2.22.1
     eslint-plugin-import-helpers: ^1.1.0
-    eslint-plugin-jsx-a11y: ^6.4.0
+    eslint-plugin-jsx-a11y: ^6.4.1
     eslint-plugin-prettier: ^3.3.0
     eslint-plugin-react: ^7.21.5
     eslint-plugin-react-hooks: ^4.2.0
     husky: ^4.3.0
     jest: ^26.6.1
     jest-circus: ^26.6.1
-    lint-staged: ^10.4.2
+    lint-staged: ^10.5.3
     prettier: ^2.2.1
     rimraf: ^3.0.2
-    semantic-release: ^17.2.1
+    semantic-release: ^17.3.0
     ts-jest: ^26.4.2
-    ts-node: ^9.0.0
-    type-fest: ^0.18.0
-    typescript: ^4.0.3
+    ts-node: ^9.1.1
+    type-fest: ^0.20.2
+    typescript: ^4.1.3
   peerDependencies:
     eslint: ^7.0.0
     prettier: ^2.0.0
@@ -1036,9 +1036,9 @@ __metadata:
     "@commitlint/config-conventional": ^11.0.0
     "@commitlint/prompt-cli": ^11.0.0
     "@seedcompany/eslint-plugin": "*"
-    "@types/eslint": ^7.2.4
+    "@types/eslint": ^7.2.6
     "@types/jest": ^26.0.15
-    "@types/node": ^14.14.2
+    "@types/node": ^14.14.14
     "@typescript-eslint/eslint-plugin": ^4.11.0
     "@typescript-eslint/experimental-utils": ^4.11.0
     "@typescript-eslint/parser": ^4.11.0
@@ -1048,21 +1048,21 @@ __metadata:
     eslint-config-prettier: ^7.1.0
     eslint-plugin-import: ^2.22.1
     eslint-plugin-import-helpers: ^1.1.0
-    eslint-plugin-jsx-a11y: ^6.4.0
+    eslint-plugin-jsx-a11y: ^6.4.1
     eslint-plugin-prettier: ^3.3.0
     eslint-plugin-react: ^7.21.5
     eslint-plugin-react-hooks: ^4.2.0
     husky: ^4.3.0
     jest: ^26.6.1
     jest-circus: ^26.6.1
-    lint-staged: ^10.4.2
+    lint-staged: ^10.5.3
     prettier: ^2.2.1
     rimraf: ^3.0.2
-    semantic-release: ^17.2.1
+    semantic-release: ^17.3.0
     ts-jest: ^26.4.2
-    ts-node: ^9.0.0
-    type-fest: ^0.18.0
-    typescript: ^4.0.3
+    ts-node: ^9.1.1
+    type-fest: ^0.20.2
+    typescript: ^4.1.3
   peerDependencies:
     eslint: ^7.0.0
     prettier: ^2.0.0
@@ -1235,7 +1235,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/eslint@npm:^7.2.4":
+"@types/eslint@npm:^7.2.6":
   version: 7.2.6
   resolution: "@types/eslint@npm:7.2.6"
   dependencies:
@@ -1333,7 +1333,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^14.14.2":
+"@types/node@npm:^14.14.14":
   version: 14.14.14
   resolution: "@types/node@npm:14.14.14"
   checksum: dea8d257d49d68c65dafa6ebde9453bb61b67febc92ed8d7e38fce8b95f18d32ccffb3ab37021f9be8d1e5c65cd59cdb7dd8981d9b89b2be103b3012aee09fcf
@@ -3709,7 +3709,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-jsx-a11y@npm:^6.4.0":
+"eslint-plugin-jsx-a11y@npm:^6.4.1":
   version: 6.4.1
   resolution: "eslint-plugin-jsx-a11y@npm:6.4.1"
   dependencies:
@@ -6605,7 +6605,7 @@ fsevents@^2.1.2:
   languageName: node
   linkType: hard
 
-"lint-staged@npm:^10.4.2":
+"lint-staged@npm:^10.5.3":
   version: 10.5.3
   resolution: "lint-staged@npm:10.5.3"
   dependencies:
@@ -9394,7 +9394,7 @@ fsevents@^2.1.2:
   languageName: node
   linkType: hard
 
-"semantic-release@npm:17.3.0, semantic-release@npm:^17.2.1":
+"semantic-release@npm:17.3.0, semantic-release@npm:^17.3.0":
   version: 17.3.0
   resolution: "semantic-release@npm:17.3.0"
   dependencies:
@@ -10507,7 +10507,7 @@ fsevents@^2.1.2:
   languageName: node
   linkType: hard
 
-"ts-node@npm:^9.0.0":
+"ts-node@npm:^9.1.1":
   version: 9.1.1
   resolution: "ts-node@npm:9.1.1"
   dependencies:
@@ -10620,10 +10620,10 @@ fsevents@^2.1.2:
   languageName: node
   linkType: hard
 
-"type-fest@npm:^0.18.0":
-  version: 0.18.1
-  resolution: "type-fest@npm:0.18.1"
-  checksum: 0d6d338e72b625a0d2c8fb4c138f5221301e40ac127e1b909bc12890ce358ef9cf11136e13aa0efd82e248bbeefd7148c01985dce2e5ab79d47a2efa75dfe8d2
+"type-fest@npm:^0.20.2":
+  version: 0.20.2
+  resolution: "type-fest@npm:0.20.2"
+  checksum: 1f887bc6150e632fb772fd28e33c22a4ab036c6f484fa9ac2e2115f6cae9d62bba7ca0368e3332b539d85bd2c8391c7bff22ad410abcbc9ab3774d61e250b210
   languageName: node
   linkType: hard
 
@@ -10657,7 +10657,7 @@ fsevents@^2.1.2:
   languageName: node
   linkType: hard
 
-typescript@^4.0.3:
+typescript@^4.1.3:
   version: 4.1.3
   resolution: "typescript@npm:4.1.3"
   bin:
@@ -10667,7 +10667,7 @@ typescript@^4.0.3:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@^4.0.3#builtin<compat/typescript>":
+"typescript@patch:typescript@^4.1.3#builtin<compat/typescript>":
   version: 4.1.3
   resolution: "typescript@patch:typescript@npm%3A4.1.3#builtin<compat/typescript>::version=4.1.3&hash=5bf698"
   bin:
