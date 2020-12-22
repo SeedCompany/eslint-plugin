@@ -31,7 +31,7 @@ jobs:
 
           yarn install
 
-          yarn deduplicate
+          yarn dedupe
 
           git add yarn.lock
 
