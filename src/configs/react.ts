@@ -31,6 +31,10 @@ export const config: Linter.Config = {
         })),
     ],
 
+    // Allow `extends any` for TSX
+    // This makes the distinction that it's a generic instead of JSX
+    '@typescript-eslint/no-unnecessary-type-constraint': 'off',
+
     //region React
     'react/forbid-foreign-prop-types': [
       'warn',

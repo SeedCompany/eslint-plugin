@@ -998,10 +998,10 @@ __metadata:
     "@types/eslint": ^7.2.4
     "@types/jest": ^26.0.15
     "@types/node": ^14.14.2
-    "@typescript-eslint/eslint-plugin": ^4.5.0
-    "@typescript-eslint/experimental-utils": ^4.5.0
-    "@typescript-eslint/parser": ^4.5.0
-    "@typescript-eslint/types": ^4.5.0
+    "@typescript-eslint/eslint-plugin": ^4.11.0
+    "@typescript-eslint/experimental-utils": ^4.11.0
+    "@typescript-eslint/parser": ^4.11.0
+    "@typescript-eslint/types": ^4.11.0
     confusing-browser-globals: ^1.0.10
     eslint: ^7.16.0
     eslint-config-prettier: ^6.14.0
@@ -1039,10 +1039,10 @@ __metadata:
     "@types/eslint": ^7.2.4
     "@types/jest": ^26.0.15
     "@types/node": ^14.14.2
-    "@typescript-eslint/eslint-plugin": ^4.5.0
-    "@typescript-eslint/experimental-utils": ^4.5.0
-    "@typescript-eslint/parser": ^4.5.0
-    "@typescript-eslint/types": ^4.5.0
+    "@typescript-eslint/eslint-plugin": ^4.11.0
+    "@typescript-eslint/experimental-utils": ^4.11.0
+    "@typescript-eslint/parser": ^4.11.0
+    "@typescript-eslint/types": ^4.11.0
     confusing-browser-globals: ^1.0.10
     eslint: ^7.16.0
     eslint-config-prettier: ^6.14.0
@@ -1400,7 +1400,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/eslint-plugin@npm:^4.5.0":
+"@typescript-eslint/eslint-plugin@npm:^4.11.0":
   version: 4.11.0
   resolution: "@typescript-eslint/eslint-plugin@npm:4.11.0"
   dependencies:
@@ -1421,7 +1421,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/experimental-utils@npm:4.11.0, @typescript-eslint/experimental-utils@npm:^4.5.0":
+"@typescript-eslint/experimental-utils@npm:4.11.0, @typescript-eslint/experimental-utils@npm:^4.11.0":
   version: 4.11.0
   resolution: "@typescript-eslint/experimental-utils@npm:4.11.0"
   dependencies:
@@ -1437,7 +1437,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/parser@npm:^4.5.0":
+"@typescript-eslint/parser@npm:^4.11.0":
   version: 4.11.0
   resolution: "@typescript-eslint/parser@npm:4.11.0"
   dependencies:
@@ -1464,7 +1464,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/types@npm:4.11.0, @typescript-eslint/types@npm:^4.5.0":
+"@typescript-eslint/types@npm:4.11.0, @typescript-eslint/types@npm:^4.11.0":
   version: 4.11.0
   resolution: "@typescript-eslint/types@npm:4.11.0"
   checksum: 76b5bbf94b0cce067060ba2fb69b680229260b33bb304a8a0f8ab6149f5474009a0e286ede6390d0a2cff47f641f44b931fa1b18c30bec41c77de5fae565c1b5
