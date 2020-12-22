@@ -1004,11 +1004,11 @@ __metadata:
     "@typescript-eslint/types": ^4.11.0
     confusing-browser-globals: ^1.0.10
     eslint: ^7.16.0
-    eslint-config-prettier: ^6.14.0
+    eslint-config-prettier: ^7.1.0
     eslint-plugin-import: ^2.22.1
     eslint-plugin-import-helpers: ^1.1.0
     eslint-plugin-jsx-a11y: ^6.4.0
-    eslint-plugin-prettier: ^3.1.4
+    eslint-plugin-prettier: ^3.3.0
     eslint-plugin-react: ^7.21.5
     eslint-plugin-react-hooks: ^4.2.0
     husky: ^4.3.0
@@ -1045,11 +1045,11 @@ __metadata:
     "@typescript-eslint/types": ^4.11.0
     confusing-browser-globals: ^1.0.10
     eslint: ^7.16.0
-    eslint-config-prettier: ^6.14.0
+    eslint-config-prettier: ^7.1.0
     eslint-plugin-import: ^2.22.1
     eslint-plugin-import-helpers: ^1.1.0
     eslint-plugin-jsx-a11y: ^6.4.0
-    eslint-plugin-prettier: ^3.1.4
+    eslint-plugin-prettier: ^3.3.0
     eslint-plugin-react: ^7.21.5
     eslint-plugin-react-hooks: ^4.2.0
     husky: ^4.3.0
@@ -3646,16 +3646,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-config-prettier@npm:^6.14.0":
-  version: 6.15.0
-  resolution: "eslint-config-prettier@npm:6.15.0"
-  dependencies:
-    get-stdin: ^6.0.0
+"eslint-config-prettier@npm:^7.1.0":
+  version: 7.1.0
+  resolution: "eslint-config-prettier@npm:7.1.0"
   peerDependencies:
-    eslint: ">=3.14.1"
+    eslint: ">=7.0.0"
   bin:
-    eslint-config-prettier-check: bin/cli.js
-  checksum: a790bc61699e43a2edc5453488576cd977fad3b3cf99c129c10760ce6970d422923fddf80b65b2b10a93c00af0180a854e4b7824cc268e5957826cbe5b969e90
+    eslint-config-prettier: bin/cli.js
+  checksum: 968a1166c3c14ac769b5bd30192dfc81f02319e565a907f1299ae1322eccf836ebaab5a7ebdb5ceefc35b65f5c9d781e5bb92a72bf299d2dde4353b5a828a0f3
   languageName: node
   linkType: hard
 
@@ -3732,7 +3730,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-prettier@npm:^3.1.4":
+"eslint-plugin-prettier@npm:^3.3.0":
   version: 3.3.0
   resolution: "eslint-plugin-prettier@npm:3.3.0"
   dependencies:
@@ -4519,13 +4517,6 @@ fsevents@^2.1.2:
   version: 8.0.0
   resolution: "get-stdin@npm:8.0.0"
   checksum: 009a4c42484cc30fe0f353d0a8c593dda0cdef46f4fb8c1668860d8e2fd6ca53faa2a08a85fdf3a4a56dfbe38f940772fd8b66e0ecba333a8f055c56cda72537
-  languageName: node
-  linkType: hard
-
-"get-stdin@npm:^6.0.0":
-  version: 6.0.0
-  resolution: "get-stdin@npm:6.0.0"
-  checksum: b51d664838aef7f8353dc57371ce59cea54d8d584fec015a9d89d24561e95b97806d5b5ba120bc81574c9ed63cb3e210176ffa0ff9263c7e7ba4d56d0fe54913
   languageName: node
   linkType: hard
 

@@ -11,18 +11,12 @@ export const config: Linter.Config = {
     sourceType: 'module',
     project: 'tsconfig.json',
   },
-  plugins: [
-    '@typescript-eslint',
-    'import',
-    'import-helpers',
-    'prettier',
-    '@seedcompany',
-  ],
+  plugins: ['import', 'import-helpers', '@seedcompany'],
   extends: [
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
-    'prettier',
+    'plugin:prettier/recommended',
     'prettier/@typescript-eslint',
   ],
   rules: {
