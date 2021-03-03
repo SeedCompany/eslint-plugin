@@ -17,7 +17,6 @@ export const config: Linter.Config = {
     'plugin:@typescript-eslint/recommended',
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
     'plugin:prettier/recommended',
-    'prettier/@typescript-eslint',
   ],
   rules: {
     // region typescript-eslint
@@ -177,6 +176,9 @@ export const config: Linter.Config = {
     // and is the only tool that enforces correct usage. Enabled "always" option
     // to ensure that call site is captured in stack traces.
     '@typescript-eslint/return-await': ['error', 'always'],
+    // TODO consider this
+    // https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/sort-type-union-intersection-members.md
+    // '@typescript-eslint/sort-type-union-intersection-members': 'error',
     '@typescript-eslint/switch-exhaustiveness-check': 'error',
     '@typescript-eslint/unified-signatures': 'error',
     // endregion
