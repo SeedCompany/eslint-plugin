@@ -12,7 +12,7 @@ import type {
   ImportNamespaceSpecifier,
   Node,
   Token,
-} from '@typescript-eslint/types/dist/ts-estree';
+} from '@typescript-eslint/types/dist/ast-spec';
 import { Mutable } from 'type-fest';
 
 type ImportSpecifier = ImportNamedSpecifier | ImportDefaultSpecifier;
@@ -24,7 +24,7 @@ export const noUnusedVars: RuleModule<string, any[]> = {
   },
   create(context) {
     const report = (descriptor: ReportDescriptor<string>) => {
-      const node = ((descriptor as unknown) as { node?: Node }).node;
+      const node = (descriptor as unknown as { node?: Node }).node;
       if (!node) {
         return;
       }
