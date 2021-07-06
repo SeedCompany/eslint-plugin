@@ -30,7 +30,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@typescript-eslint/eslint-plugin": "^4.25.0",
+    "@typescript-eslint/eslint-plugin": "^4.28.2",
     "@typescript-eslint/experimental-utils": "^4.25.0",
     "@typescript-eslint/parser": "^4.25.0",
     "confusing-browser-globals": "^1.0.10",
