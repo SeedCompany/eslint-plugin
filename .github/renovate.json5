@@ -1,0 +1,36 @@
+{
+  extends: [
+    'config:js-lib',
+    // other options
+    ':rebaseStalePrs',
+    ':prHourlyLimitNone',
+  ],
+  labels: ['dependencies'],
+  commitMessageAction: 'bump',
+  commitMessageTopic: '{{depName}}',
+  commitMessageExtra: 'to {{newValue}}',
+  packageRules: [
+    {
+      groupName: 'typescript-eslint',
+      matchPackagePatterns: '@typescript-eslint/*',
+    },
+    {
+      matchPackageNames: 'husky',
+      allowedVersions: '< 5',
+    },
+    {
+      matchDepTypes: ['dependencies', 'require'],
+      matchUpdateTypes: ['major', 'minor'],
+      semanticCommitType: 'feat',
+    },
+    {
+      matchDepTypes: ['dependencies', 'require'],
+      matchUpdateTypes: ['patch'],
+      semanticCommitType: 'fix',
+    },
+    {
+      matchDepTypes: ['devDependencies'],
+      rangeStrategy: 'replace',
+    },
+  ],
+}
