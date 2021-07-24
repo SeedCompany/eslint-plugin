@@ -30,7 +30,7 @@
       semanticCommitType: 'fix',
     },
     {
-      matchDepTypes: ['devDependencies'],
+      matchDepTypes: ['dependencies', 'devDependencies'],
       rangeStrategy: 'replace',
     },
   ],
