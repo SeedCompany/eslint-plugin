@@ -9,6 +9,7 @@
   commitMessageAction: 'bump',
   commitMessageTopic: '{{depName}}',
   commitMessageExtra: 'to {{newValue}}',
+  postUpdateOptions: ['yarnDedupeHighest'],
   packageRules: [
     {
       groupName: 'typescript-eslint',
