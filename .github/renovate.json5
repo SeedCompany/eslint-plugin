@@ -10,6 +10,7 @@
   commitMessageTopic: '{{depName}}',
   commitMessageExtra: 'to {{newValue}}',
   postUpdateOptions: ['yarnDedupeHighest'],
+  dependencyDashboard: true,
   packageRules: [
     {
       groupName: 'typescript-eslint',
