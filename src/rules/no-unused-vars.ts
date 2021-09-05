@@ -39,7 +39,10 @@ export const noUnusedVars: RuleModule<string, any[]> = {
         const declaration = unusedImport.parent as ImportDeclaration;
         const { specifiers: imports } = declaration;
 
-        const removeBetween = (start: BaseNode | null, end: BaseNode | null) =>
+        const removeBetween = (
+          start: Token | BaseNode | null,
+          end: Token | BaseNode | null
+        ) =>
           start && end
             ? fixer.removeRange([start.range[0], end.range[1]])
             : null;
