@@ -49,9 +49,9 @@
     "prettier": "^2.0.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "^13.1.0",
-    "@commitlint/config-conventional": "^13.1.0",
-    "@commitlint/prompt-cli": "^13.1.0",
+    "@commitlint/cli": "^14.0.0",
+    "@commitlint/config-conventional": "^14.0.0",
+    "@commitlint/prompt-cli": "^14.0.0",
     "@seedcompany/eslint-plugin": "*",
     "@types/eslint": "^7.28.0",
     "@types/jest": "^27.0.1",
