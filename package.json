@@ -74,7 +74,10 @@
   "jest": {
     "preset": "ts-jest",
     "testEnvironment": "node",
-    "testRunner": "jest-circus/runner"
+    "testRunner": "jest-circus/runner",
+    "moduleNameMapper": {
+      "eslint/use-at-your-own-risk": "eslint/lib/unsupported-api.js"
+    }
   },
   "publishConfig": {
     "access": "public"
