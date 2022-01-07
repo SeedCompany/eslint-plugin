@@ -74,9 +74,10 @@ export const config: Linter.Config = {
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     // This is too invasive. Usage is discouraged though.
     '@typescript-eslint/no-explicit-any': 'off',
-    // These 4 rules prevent `as any` from being used.
+    // These 5 rules prevent `as any` from being used.
     // I would love to enable them at some point, but I think they need to be
     // opt-in for now.
+    '@typescript-eslint/no-unsafe-argument': 'off',
     '@typescript-eslint/no-unsafe-assignment': 'off',
     '@typescript-eslint/no-unsafe-call': 'off',
     '@typescript-eslint/no-unsafe-member-access': 'off',
@@ -147,13 +148,14 @@ export const config: Linter.Config = {
       { ignoreArrowShorthand: true, ignoreVoidOperator: true },
     ],
     '@typescript-eslint/no-dynamic-delete': 'error',
+    '@typescript-eslint/no-meaningless-void-operator': 'warn',
+    '@typescript-eslint/no-non-null-asserted-nullish-coalescing': 'warn',
     '@typescript-eslint/no-require-imports': 'error',
     '@typescript-eslint/no-throw-literal': 'error',
     '@typescript-eslint/no-unnecessary-boolean-literal-compare': 'warn',
     '@typescript-eslint/no-unnecessary-condition': 'warn',
     '@typescript-eslint/no-unnecessary-qualifier': 'warn',
     '@typescript-eslint/no-unnecessary-type-arguments': 'warn',
-    '@typescript-eslint/no-unnecessary-type-constraint': 'warn',
     '@typescript-eslint/non-nullable-type-assertion-style': 'warn',
     '@typescript-eslint/prefer-enum-initializers': 'warn',
     '@typescript-eslint/prefer-for-of': 'error',
