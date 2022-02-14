@@ -270,7 +270,7 @@ export const config: Linter.Config = {
       'warn',
       {
         newlinesBetween: 'never',
-        groups: ['module', 'absolute', ['parent', 'sibling', 'index']],
+        groups: ['module', '/^~//', 'absolute', ['parent', 'sibling', 'index']],
         alphabetize: {
           order: 'asc',
           ignoreCase: true,
