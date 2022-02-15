@@ -62,7 +62,7 @@
     "jest-circus": "^27.4.6",
     "lint-staged": "^11.1.2",
     "rimraf": "^3.0.2",
-    "semantic-release": "^18.0.1",
+    "semantic-release": "^19.0.0",
     "ts-jest": "^27.1.2",
     "ts-node": "^10.4.0",
     "type-fest": "^2.9.0",
