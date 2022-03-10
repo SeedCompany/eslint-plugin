@@ -70,7 +70,7 @@
     "typescript": "^4.6.2"
   },
   "resolutions": {
-    "npm/chalk": "^4.1.2",
+    "npm/chalk": "^5.0.0",
     "@seedcompany/eslint-plugin": "portal:."
   },
   "jest": {
