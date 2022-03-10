@@ -1,8 +1,4 @@
 import baseRule from '@typescript-eslint/eslint-plugin/dist/rules/no-unused-vars';
-import {
-  ReportDescriptor,
-  RuleModule,
-} from '@typescript-eslint/experimental-utils/dist/ts-eslint/Rule';
 import type {
   BaseNode,
   Comment,
@@ -13,6 +9,10 @@ import type {
   Node,
   Token,
 } from '@typescript-eslint/types/dist/ast-spec';
+import {
+  ReportDescriptor,
+  RuleModule,
+} from '@typescript-eslint/utils/dist/ts-eslint/Rule';
 import { Mutable } from 'type-fest';
 
 type ImportSpecifier = ImportNamedSpecifier | ImportDefaultSpecifier;

@@ -1,7 +1,7 @@
-import { ESLintUtils, TSESLint } from '@typescript-eslint/experimental-utils';
-import { RuleTesterConfig } from '@typescript-eslint/experimental-utils/dist/ts-eslint';
 import { clearCaches } from '@typescript-eslint/parser';
 import { ParserOptions } from '@typescript-eslint/types';
+import { ESLintUtils, TSESLint } from '@typescript-eslint/utils';
+import { RuleTesterConfig } from '@typescript-eslint/utils/dist/ts-eslint';
 import * as path from 'path';
 import { Mutable } from 'type-fest';
 
