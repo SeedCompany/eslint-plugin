@@ -21,7 +21,7 @@
     "dist/**/*"
   ],
   "engines": {
-    "node": ">=12"
+    "node": ">=16"
   },
   "scripts": {
     "build": "rimraf ./dist && tsc -b tsconfig.build.json",
