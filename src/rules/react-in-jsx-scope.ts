@@ -1,4 +1,7 @@
-import type { Node, Program } from '@typescript-eslint/types/dist/ast-spec';
+import type {
+  Node,
+  Program,
+} from '@typescript-eslint/types/dist/generated/ast-spec';
 import type { RuleModule } from '@typescript-eslint/utils/dist/ts-eslint/Rule';
 import baseRule from 'eslint-plugin-react/lib/rules/react-in-jsx-scope';
 import pragmaUtil from 'eslint-plugin-react/lib/util/pragma';
