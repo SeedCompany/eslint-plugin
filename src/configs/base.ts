@@ -245,6 +245,10 @@ export const config: Linter.Config = {
           'for..in loops iterate over the entire prototype chain, which is virtually never what you want.\n ' +
           'Use Object.{keys,values,entries}, and iterate over the resulting array with a for..of loop.',
       },
+      {
+        selector: "ImportDeclaration[source.value='.']",
+        message: 'Import from sibling file instead of referencing self',
+      },
     ],
     'no-trailing-spaces': [
       'warn',
