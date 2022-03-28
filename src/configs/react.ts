@@ -32,30 +32,39 @@ export const config: Linter.Config = {
     ],
 
     //region React
+    'react/display-name': 'error',
     'react/forbid-foreign-prop-types': [
       'warn',
       {
         allowInPropTypes: true,
       },
     ],
-    'react/jsx-no-comment-textnodes': 'warn',
-    'react/jsx-no-duplicate-props': 'warn',
-    'react/jsx-no-target-blank': 'warn',
-    'react/jsx-no-undef': 'error',
-    'react/jsx-pascal-case': [
-      'warn',
+    'react/jsx-key': [
+      'error',
       {
-        allowAllCaps: true,
-        ignore: [],
+        checkFragmentShorthand: true,
+        checkKeyMustBeforeSpread: true,
       },
     ],
-    'react/jsx-uses-vars': 'warn',
+    'react/jsx-no-comment-textnodes': 'error',
+    'react/jsx-no-constructed-context-values': 'error',
+    'react/jsx-no-target-blank': 'warn',
+    'react/no-find-dom-node': 'error',
+    'react/no-render-return-value': 'error',
+    'react/no-string-refs': 'error',
     'react/no-danger-with-children': 'warn',
-    'react/no-direct-mutation-state': 'warn',
-    'react/no-is-mounted': 'warn',
-    'react/no-typos': 'error',
-    'react/require-render-return': 'error',
-    'react/style-prop-object': 'warn',
+    'react/void-dom-elements-no-children': 'error',
+
+    // styling, has fixer
+    'react/jsx-curly-brace-presence': [
+      'warn',
+      {
+        props: 'never',
+        children: 'never',
+      },
+    ],
+    // styling, enforce shorthand, has fixer
+    'react/jsx-fragments': 'warn',
     //endregion
 
     //region React Hooks
