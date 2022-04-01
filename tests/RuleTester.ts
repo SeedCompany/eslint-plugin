@@ -1,6 +1,6 @@
 import { clearCaches } from '@typescript-eslint/parser';
 import { ParserOptions } from '@typescript-eslint/types';
-import { ESLintUtils, TSESLint } from '@typescript-eslint/utils';
+import { TSESLint } from '@typescript-eslint/utils';
 import { RuleTesterConfig } from '@typescript-eslint/utils/dist/ts-eslint';
 import * as path from 'path';
 import { Mutable } from 'type-fest';
@@ -94,25 +94,8 @@ export function getFixturesRootDir(): string {
   return path.join(process.cwd(), 'tests/fixtures/');
 }
 
-export const { batchedSingleLineTests } = ESLintUtils;
-
 // make sure that the parser doesn't hold onto file handles between tests
 // on linux (i.e. our CI env), there can be very a limited number of watch handles available
 afterAll(() => {
   clearCaches();
 });
-
-/**
- * Simple no-op tag to mark code samples as "should not format with prettier"
- *   for the internal/plugin-test-formatting lint rule
- */
-export function noFormat(
-  strings: TemplateStringsArray,
-  ...keys: string[]
-): string {
-  const lastIndex = strings.length - 1;
-  return (
-    strings.slice(0, lastIndex).reduce((p, s, i) => p + s + keys[i], '') +
-    strings[lastIndex]
-  );
-}
