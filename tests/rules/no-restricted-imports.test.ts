@@ -2,16 +2,7 @@ import { AST_NODE_TYPES } from '@typescript-eslint/types';
 import { noRestrictedImports as rule } from '../../src/rules/no-restricted-imports';
 import { RuleTester } from '../RuleTester';
 
-const tester = new RuleTester({
-  parserOptions: {
-    sourceType: 'module',
-    ecmaFeatures: {
-      jsx: true,
-    },
-  },
-});
-
-tester.run('@seedcompany/no-restricted-imports', rule, {
+new RuleTester().run('@seedcompany/no-restricted-imports', rule, {
   valid: [
     'import os from "os";',
     { code: 'import os from "os";', options: [{ path: 'osx' }] },
@@ -299,22 +290,11 @@ tester.run('@seedcompany/no-restricted-imports', rule, {
       ],
     },
     {
-      code: 'import "foo";',
+      code: 'import "foo-without-restricted-specifiers";',
       options: [
         {
-          path: 'foo',
+          path: 'foo-without-restricted-specifiers',
           importNames: ['DisallowedObject', 'DisallowedObjectTwo'],
-          message:
-            "Please import 'DisallowedObject' and 'DisallowedObjectTwo' from /bar/ instead.",
-        },
-      ],
-    },
-    {
-      code: 'import "foo";',
-      options: [
-        {
-          path: 'foo',
-          importNames: '*',
         },
       ],
     },
