@@ -1,9 +1,47 @@
 import { clearCaches } from '@typescript-eslint/parser';
 import { ParserOptions } from '@typescript-eslint/types';
-import { ESLintUtils, TSESLint } from '@typescript-eslint/utils';
+import { TSESLint } from '@typescript-eslint/utils';
 import { RuleTesterConfig } from '@typescript-eslint/utils/dist/ts-eslint';
+import { RuleModule } from '@typescript-eslint/utils/dist/ts-eslint/Rule';
+import {
+  TestCaseError,
+  ValidTestCase,
+} from '@typescript-eslint/utils/dist/ts-eslint/RuleTester';
 import * as path from 'path';
 import { Mutable } from 'type-fest';
+
+interface CorrectedInvalidTestCase<
+  TMessageIds extends string,
+  TOptions extends Readonly<unknown[]>
+> extends ValidTestCase<TOptions> {
+  /**
+   * Expected errors or number of errors.
+   */
+  readonly errors: ReadonlyArray<TestCaseError<TMessageIds>> | number;
+
+  /**
+   * The expected code after autofixes are applied.
+   * If set to `null`, the test runner will assert that no autofix is suggested.
+   */
+  readonly output?: string | null;
+}
+
+interface CorrectedRunTests<
+  TMessageIds extends string,
+  TOptions extends Readonly<unknown[]>
+> {
+  readonly valid: ReadonlyArray<ValidTestCase<TOptions> | string>;
+  readonly invalid: ReadonlyArray<
+    CorrectedInvalidTestCase<TMessageIds, TOptions>
+  >;
+}
+
+export type MessagesOf<TRuleModule extends RuleModule<any>> =
+  TRuleModule extends RuleModule<infer Messages> ? Messages : never;
+export type OptionsOf<TRuleModule extends RuleModule<any>> =
+  TRuleModule extends RuleModule<any, infer Options> ? Options : never;
+export type InvalidTestCaseOf<TRuleModule extends RuleModule<any>> =
+  CorrectedInvalidTestCase<MessagesOf<TRuleModule>, OptionsOf<TRuleModule>>;
 
 const parser = '@typescript-eslint/parser';
 
@@ -17,9 +55,13 @@ export class RuleTester extends TSESLint.RuleTester {
     const options: RuleTesterConfig = {
       ...opts,
       parserOptions: {
+        sourceType: 'module',
         ecmaVersion: 2018,
         tsconfigRootDir: getFixturesRootDir(),
         project: './tsconfig.json',
+        ecmaFeatures: {
+          jsx: true,
+        },
         ...opts.parserOptions,
       },
       parser: require.resolve(parser),
@@ -49,7 +91,7 @@ export class RuleTester extends TSESLint.RuleTester {
   run<TMessageIds extends string, TOptions extends Readonly<unknown[]>>(
     name: string,
     rule: TSESLint.RuleModule<TMessageIds, TOptions>,
-    tests: TSESLint.RunTests<TMessageIds, TOptions>
+    tests: CorrectedRunTests<TMessageIds, TOptions>
   ): void {
     const errorMessage = `Do not set the parser at the test level unless you want to use a parser other than ${parser}`;
 
@@ -86,7 +128,12 @@ export class RuleTester extends TSESLint.RuleTester {
       }
     });
 
-    super.run(name, rule, tests);
+    super.run(
+      name,
+      rule,
+      // @ts-expect-error I corrected the types to allow errors to be size as well
+      tests
+    );
   }
 }
 
@@ -94,25 +141,8 @@ export function getFixturesRootDir(): string {
   return path.join(process.cwd(), 'tests/fixtures/');
 }
 
-export const { batchedSingleLineTests } = ESLintUtils;
-
 // make sure that the parser doesn't hold onto file handles between tests
 // on linux (i.e. our CI env), there can be very a limited number of watch handles available
 afterAll(() => {
   clearCaches();
 });
-
-/**
- * Simple no-op tag to mark code samples as "should not format with prettier"
- *   for the internal/plugin-test-formatting lint rule
- */
-export function noFormat(
-  strings: TemplateStringsArray,
-  ...keys: string[]
-): string {
-  const lastIndex = strings.length - 1;
-  return (
-    strings.slice(0, lastIndex).reduce((p, s, i) => p + s + keys[i], '') +
-    strings[lastIndex]
-  );
-}

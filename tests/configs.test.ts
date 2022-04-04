@@ -8,6 +8,6 @@ test.each(Object.entries(configs))('%s', async (name, config) => {
     cwd: __dirname,
   });
   const [results] = await linter.lintFiles([`../src/configs/${name}.ts`]);
-  expect(results.messages.map((m) => m.message)).toEqual([]);
-  expect(results.usedDeprecatedRules).toHaveLength(0);
+  expect(results!.messages.map((m) => m.message)).toEqual([]);
+  expect(results!.usedDeprecatedRules).toHaveLength(0);
 });
