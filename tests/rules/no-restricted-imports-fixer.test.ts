@@ -28,8 +28,8 @@ const configs = {
   // name1 -> name2
   b: c({
     path: 'foo',
-    importNames: ['bad'],
-    replacement: { importNames: { bad: 'good' } },
+    importNames: 'bad',
+    replacement: { importName: 'good' },
   }),
   // name1 path1 -> name2 path2
   c: c({

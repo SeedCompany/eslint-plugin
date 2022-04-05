@@ -42,6 +42,12 @@ type Replacement = Readonly<{
    * Any omissions here will leave the specifier unchanged.
    */
   importNames?: Readonly<Record<string, string>>;
+
+  /**
+   * A shortcut for replacement.importNames.
+   * Useful, and ony allowed, when importNames is a single item.
+   */
+  importName?: string;
 }>;
 
 type ResolvedImportRestriction = Readonly<
@@ -135,6 +141,18 @@ export const rule: ESLint.RuleModule<
           importNames: maybeCastSet(opt.importNames),
         })
       )
+      .map((opt, i) => {
+        if (
+          (opt.importNames?.size ?? 0) > 1 &&
+          typeof opt.replacement === 'object' &&
+          opt.replacement.importName
+        ) {
+          throw new Error(
+            `@seedcompany/no-restricted-imports [${i}].replacement.importName can only be used in when importNames is one item`
+          );
+        }
+        return opt;
+      })
       .filter((opt) => opt.pattern || opt.path.size > 0);
 
     const checkNode = nodeChecker(context, resolved);
@@ -282,10 +300,11 @@ const checkSpecifier = (
         importName: result.importName ?? specifier.name,
       };
     } else {
-      const { importNames, ...rest } = restriction.replacement!;
+      const { importName, importNames, ...rest } = restriction.replacement!;
       replacement = {
         ...rest,
-        importName: importNames?.[specifier.name] ?? specifier.name,
+        importName:
+          importName ?? importNames?.[specifier.name] ?? specifier.name,
       };
     }
     const templateData = {
