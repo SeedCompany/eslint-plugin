@@ -29,13 +29,13 @@ const configs = {
   b: c({
     path: 'foo',
     importNames: ['bad'],
-    replacement: { specifiers: { bad: 'good' } },
+    replacement: { importNames: { bad: 'good' } },
   }),
   // name1 path1 -> name2 path2
   c: c({
     path: 'foo',
     importNames: ['bad'],
-    replacement: { path: 'bar', specifiers: { bad: 'good' } },
+    replacement: { path: 'bar', importNames: { bad: 'good' } },
   }),
   // name1 path1 -> name1 path2
   h: c({
@@ -47,25 +47,25 @@ const configs = {
   d: c({
     path: 'foo',
     importNames: 'bad',
-    replacement: { specifiers: { bad: 'default' } },
+    replacement: { importNames: { bad: 'default' } },
   }),
   // default -> name1
   e: c({
     path: 'foo',
     importNames: 'default',
-    replacement: { specifiers: { default: 'good' } },
+    replacement: { importNames: { default: 'good' } },
   }),
   // name1 path1 -> default1 path2
   f: c({
     path: 'foo',
     importNames: 'bad',
-    replacement: { path: 'bar', specifiers: { bad: 'default' } },
+    replacement: { path: 'bar', importNames: { bad: 'default' } },
   }),
   // default path1 -> name1 path2
   g: c({
     path: 'foo',
     importNames: 'default',
-    replacement: { path: 'bar', specifiers: { default: 'good' } },
+    replacement: { path: 'bar', importNames: { default: 'good' } },
   }),
 };
 
@@ -326,7 +326,7 @@ new RuleTester().run('@seedcompany/no-restricted-imports', rule, {
           importNames: 'default',
           replacement: {
             path: '{path}2',
-            specifiers: {
+            importNames: {
               default: '{localName}2',
             },
           },

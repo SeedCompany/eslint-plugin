@@ -27,10 +27,10 @@ export type ImportRestriction = Readonly<{
 export type ReplacementOrFn =
   | Replacement
   | ((args: {
-      specifier?: string;
+      importName?: string;
       localName?: string;
       path: string;
-    }) => Omit<Replacement, 'specifiers'> & { specifier?: string });
+    }) => Omit<Replacement, 'importNames'> & { importName?: string });
 
 type Replacement = Readonly<{
   /**
@@ -41,7 +41,7 @@ type Replacement = Readonly<{
    * A mapping of restricted specifiers to their replacement names.
    * Any omissions here will leave the specifier unchanged.
    */
-  specifiers?: Readonly<Record<string, string>>;
+  importNames?: Readonly<Record<string, string>>;
 }>;
 
 type ResolvedImportRestriction = Readonly<
@@ -274,29 +274,29 @@ const checkSpecifier = (
     let replacement;
     if (typeof restriction.replacement === 'function') {
       const result = restriction.replacement({
-        specifier: specifier.name,
+        importName: specifier.name,
         path: specifier.declaration.source.value,
       });
       replacement = {
         path: result.path,
-        specifier: result.specifier ?? specifier.name,
+        importName: result.importName ?? specifier.name,
       };
     } else {
-      const { specifiers, ...rest } = restriction.replacement!;
+      const { importNames, ...rest } = restriction.replacement!;
       replacement = {
         ...rest,
-        specifier: specifiers?.[specifier.name] ?? specifier.name,
+        importName: importNames?.[specifier.name] ?? specifier.name,
       };
     }
     const templateData = {
       path: specifier.source.value,
       localName: specifier.node.local.name,
     };
-    replacement = {
+    const interpolated = {
       path: maybe(replacement.path, (path) => interpolate(path, templateData)),
-      specifier: interpolate(replacement.specifier, templateData),
+      importName: interpolate(replacement.importName, templateData),
     };
-    return fixSpecifier(fixer, specifier, restriction, replacement);
+    return fixSpecifier(fixer, specifier, restriction, interpolated);
   },
 });
 
@@ -323,13 +323,13 @@ const fixSpecifier = (
   fixer: ESLint.RuleFixer,
   specifier: Specifier,
   restriction: ResolvedImportRestriction,
-  replacement: { path?: string | undefined; specifier: string }
+  replacement: { path?: string | undefined; importName: string }
 ): ReturnType<ESLint.ReportFixFunction> => {
   const node = specifier.node;
   const declaration = specifier.declaration;
 
   if (
-    replacement.specifier === 'default' &&
+    replacement.importName === 'default' &&
     declaration.specifiers.some((s) => s.isDefault)
   ) {
     // Import already has default, let human fix.
@@ -349,7 +349,7 @@ const fixSpecifier = (
 
   if (replacement.path) {
     const newImportSpecifier =
-      replacement.specifier === 'default' && node.type !== 'ExportSpecifier'
+      replacement.importName === 'default' && node.type !== 'ExportSpecifier'
         ? node.local.name
         : `{ ${specifier.rename(replacement)} }`;
     const keyword = specifier.isExport ? 'export' : 'import';
@@ -386,11 +386,11 @@ const fixSpecifier = (
   }
 
   // No path or specifier, nothing to change.
-  if (!replacement.specifier) {
+  if (!replacement.importName) {
     return null;
   }
 
-  const newIsDefault = replacement.specifier === 'default';
+  const newIsDefault = replacement.importName === 'default';
 
   if (specifier.isExport) {
     return fixer.replaceText(node, specifier.rename(replacement));
@@ -528,10 +528,10 @@ class Specifier {
     );
   }
 
-  rename(replacement: { specifier: string }) {
-    return replacement.specifier === this.node.local.name
-      ? replacement.specifier
-      : `${replacement.specifier} as ${this.node.local.name}`;
+  rename(replacement: { importName: string }) {
+    return replacement.importName === this.node.local.name
+      ? replacement.importName
+      : `${replacement.importName} as ${this.node.local.name}`;
   }
 }
 
