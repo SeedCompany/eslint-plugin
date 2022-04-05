@@ -1,4 +1,4 @@
-import { noRestrictedImports } from './no-restricted-imports';
+import { rule as noRestrictedImports } from './no-restricted-imports';
 import { noUnusedVars } from './no-unused-vars';
 
 // eslint-disable-next-line import/no-default-export

@@ -1,8 +1,5 @@
 import { stripIndent as ts } from 'common-tags';
-import {
-  ImportRestriction,
-  noRestrictedImports as rule,
-} from '../../src/rules/no-restricted-imports';
+import { ImportRestriction, rule } from '../../src/rules/no-restricted-imports';
 import { InvalidTestCaseOf, RuleTester } from '../RuleTester';
 
 const imports = {

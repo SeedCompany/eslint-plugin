@@ -1,5 +1,5 @@
 import { AST_NODE_TYPES } from '@typescript-eslint/types';
-import { noRestrictedImports as rule } from '../../src/rules/no-restricted-imports';
+import { rule } from '../../src/rules/no-restricted-imports';
 import { RuleTester } from '../RuleTester';
 
 new RuleTester().run('@seedcompany/no-restricted-imports', rule, {
