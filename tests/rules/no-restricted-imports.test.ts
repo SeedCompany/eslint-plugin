@@ -1,5 +1,5 @@
 import { AST_NODE_TYPES } from '@typescript-eslint/types';
-import { noRestrictedImports as rule } from '../../src/rules/no-restricted-imports';
+import { rule } from '../../src/rules/no-restricted-imports';
 import { RuleTester } from '../RuleTester';
 
 new RuleTester().run('@seedcompany/no-restricted-imports', rule, {
@@ -286,6 +286,34 @@ new RuleTester().run('@seedcompany/no-restricted-imports', rule, {
           path: 'bar',
           importNames: ['DisallowedObject'],
           message: "Please import 'DisallowedObject' from /bar/ instead.",
+        },
+      ],
+    },
+    {
+      code: 'import onlyDefault from "foo";',
+      options: [
+        {
+          path: 'foo',
+          allowNames: 'default',
+        },
+      ],
+    },
+    {
+      code: 'import { onlyName } from "foo";',
+      options: [
+        {
+          path: 'foo',
+          allowNames: ['onlyName'],
+        },
+      ],
+    },
+    {
+      code: 'import { good, fine } from "foo";',
+      options: [
+        {
+          path: 'foo',
+          importNames: ['bad'],
+          allowNames: ['fine'],
         },
       ],
     },
@@ -701,6 +729,7 @@ DisallowedObject, // eslint-disable-line
         {
           path: 'foo',
           importNames: ['default'],
+          allowNames: ['ok'],
           message:
             "Please import the default import of 'foo' from /bar/ instead.",
         },

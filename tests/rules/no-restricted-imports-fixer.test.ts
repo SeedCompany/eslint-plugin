@@ -1,8 +1,5 @@
 import { stripIndent as ts } from 'common-tags';
-import {
-  ImportRestriction,
-  noRestrictedImports as rule,
-} from '../../src/rules/no-restricted-imports';
+import { ImportRestriction, rule } from '../../src/rules/no-restricted-imports';
 import { InvalidTestCaseOf, RuleTester } from '../RuleTester';
 
 const imports = {
@@ -31,14 +28,14 @@ const configs = {
   // name1 -> name2
   b: c({
     path: 'foo',
-    importNames: ['bad'],
-    replacement: { specifiers: { bad: 'good' } },
+    importNames: 'bad',
+    replacement: { importName: 'good' },
   }),
   // name1 path1 -> name2 path2
   c: c({
     path: 'foo',
     importNames: ['bad'],
-    replacement: { path: 'bar', specifiers: { bad: 'good' } },
+    replacement: { path: 'bar', importNames: { bad: 'good' } },
   }),
   // name1 path1 -> name1 path2
   h: c({
@@ -50,25 +47,25 @@ const configs = {
   d: c({
     path: 'foo',
     importNames: 'bad',
-    replacement: { specifiers: { bad: 'default' } },
+    replacement: { importNames: { bad: 'default' } },
   }),
   // default -> name1
   e: c({
     path: 'foo',
     importNames: 'default',
-    replacement: { specifiers: { default: 'good' } },
+    replacement: { importNames: { default: 'good' } },
   }),
   // name1 path1 -> default1 path2
   f: c({
     path: 'foo',
     importNames: 'bad',
-    replacement: { path: 'bar', specifiers: { bad: 'default' } },
+    replacement: { path: 'bar', importNames: { bad: 'default' } },
   }),
   // default path1 -> name1 path2
   g: c({
     path: 'foo',
     importNames: 'default',
-    replacement: { path: 'bar', specifiers: { default: 'good' } },
+    replacement: { path: 'bar', importNames: { default: 'good' } },
   }),
 };
 
@@ -305,5 +302,38 @@ new RuleTester().run('@seedcompany/no-restricted-imports', rule, {
         errors: rest?.errors ?? 1,
       };
     }),
+
+    {
+      name: 'Interpolates replacement path',
+      code: ts`import Card from 'foo/macro';`,
+      options: [
+        {
+          pattern: '[a-z]*/macro',
+          replacement: {
+            path: '{path}2',
+          },
+        },
+      ],
+      errors: 1,
+      output: ts`import Card from 'foo/macro2';`,
+    },
+    {
+      name: 'Interpolates replacement specifiers & path',
+      code: ts`import Card from 'foo/macro';`,
+      options: [
+        {
+          pattern: '[a-z]*/macro',
+          importNames: 'default',
+          replacement: {
+            path: '{path}2',
+            importNames: {
+              default: '{localName}2',
+            },
+          },
+        },
+      ],
+      errors: 1,
+      output: ts`import { Card2 as Card } from 'foo/macro2';`,
+    },
   ],
 });
