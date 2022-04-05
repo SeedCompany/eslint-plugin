@@ -26,15 +26,20 @@ export type ImportRestriction = Readonly<{
   replacement?: ReplacementOrFn;
 }>;
 
-export type ReplacementOrFn =
-  | Replacement
-  | ((args: {
-      importName?: string;
-      localName?: string;
-      path: string;
-    }) => Omit<Replacement, 'importNames'> & { importName?: string });
+export type ReplacementOrFn = Replacement | ReplacementFn;
 
-type Replacement = Readonly<{
+export type ReplacementFn = (
+  args: ReplacementFnArgs
+) => Omit<Replacement, 'importNames'> & { importName?: string };
+export interface ReplacementFnArgs {
+  /** null if path declaration error */
+  importName: string;
+  /** null if path declaration error */
+  localName: string;
+  path: string;
+}
+
+export type Replacement = Readonly<{
   /**
    * The new replacement path
    */
@@ -243,37 +248,41 @@ const matchSpecifierRestriction =
 const checkDeclaration = (
   declaration: Declaration,
   restriction: ResolvedImportRestriction
-): ReportDescriptor | null => {
-  return {
-    node: declaration.node,
-    messageId: `${restriction.importNames ? 'specifier' : 'path'}${
-      restriction.message ? 'WithCustomMessage' : ''
-    }`,
-    data: {
-      importSource: declaration.source.value,
-      customMessage: restriction.message,
-    },
-    fix: (fixer) => {
-      if (!restriction.replacement) {
-        return null;
-      }
-      const { path } =
-        typeof restriction.replacement === 'function'
-          ? restriction.replacement({
-              path: declaration.source.value,
-            })
-          : restriction.replacement!;
-      const replacement = {
-        path: maybe(path, (path) =>
-          interpolate(path, {
+): ReportDescriptor | null => ({
+  node: declaration.node,
+  messageId: `${restriction.importNames ? 'specifier' : 'path'}${
+    restriction.message ? 'WithCustomMessage' : ''
+  }`,
+  data: {
+    importSource: declaration.source.value,
+    customMessage: restriction.message,
+  },
+  fix: (fixer) => {
+    if (!restriction.replacement) {
+      return null;
+    }
+    const { path } =
+      typeof restriction.replacement === 'function'
+        ? restriction.replacement({
             path: declaration.source.value,
+            // @ts-expect-error This arg property should be typed as nullable
+            // We leave it non-nullable, so it's easier to work with for the
+            // majority use case, which is specifiers - not declarations (this).
+            importName: undefined,
+            // @ts-expect-error This arg property should be typed as nullable
+            localName: undefined,
           })
-        ),
-      };
-      return fixDeclaration(fixer, declaration, restriction, replacement);
-    },
-  };
-};
+        : restriction.replacement!;
+    const replacement = {
+      path: maybe(path, (path) =>
+        interpolate(path, {
+          path: declaration.source.value,
+        })
+      ),
+    };
+    return fixDeclaration(fixer, declaration, restriction, replacement);
+  },
+});
 
 const checkSpecifier = (
   specifier: Specifier,
@@ -305,6 +314,7 @@ const checkSpecifier = (
     if (typeof restriction.replacement === 'function') {
       const result = restriction.replacement({
         importName: specifier.name,
+        localName: specifier.node.local.name,
         path: specifier.declaration.source.value,
       });
       replacement = {

@@ -17,7 +17,7 @@ const imports = {
   k: ts`export * as ns from 'foo';`,
 };
 
-const c = <T extends ImportRestriction>(t: T) => t;
+const c = (t: ImportRestriction) => t;
 
 const configs = {
   // path1 -> path2
@@ -326,11 +326,25 @@ new RuleTester().run('@seedcompany/no-restricted-imports', rule, {
           importNames: 'default',
           replacement: {
             path: '{path}2',
-            importNames: {
-              default: '{localName}2',
-            },
+            importName: '{localName}2',
           },
         },
+      ],
+      errors: 1,
+      output: ts`import { Card2 as Card } from 'foo/macro2';`,
+    },
+    {
+      name: 'Interpolates replacement specifiers & path from replacement fn',
+      code: ts`import Card from 'foo/macro';`,
+      options: [
+        c({
+          pattern: '[a-z]*/macro',
+          importNames: 'default',
+          replacement: ({ path, localName }) => ({
+            path: `${path}2`,
+            importName: `${localName}2`,
+          }),
+        }),
       ],
       errors: 1,
       output: ts`import { Card2 as Card } from 'foo/macro2';`,
