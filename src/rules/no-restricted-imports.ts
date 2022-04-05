@@ -224,7 +224,7 @@ const nodeChecker =
       });
     }
 
-    if (declaration.isExportALl || !declaration.specifiers[0]?.isNamespace) {
+    if (declaration.specifiers.length === 0) {
       const match = restrictions.find(matchDeclarationRestriction(declaration));
       if (!match) {
         return;
@@ -240,18 +240,13 @@ const nodeChecker =
 const matchDeclarationRestriction =
   (declaration: Declaration) => (res: ResolvedImportRestriction) =>
     (!res.importNames || declaration.isExportALl) &&
-    (res.allowNames
-      ? setMinus(declaration.specifierNames, res.allowNames).size > 0
-      : true) &&
     (res.kind ? res.kind === declaration.kind : true);
 
 const matchSpecifierRestriction =
   (specifier: Specifier) => (res: ResolvedImportRestriction) =>
     (specifier.name === '*' ||
-      (res.importNames || res.allowNames
-        ? (res.importNames?.has(specifier.name) ?? true) &&
-          !res.allowNames?.has(specifier.name)
-        : false)) &&
+      ((res.importNames?.has(specifier.name) ?? true) &&
+        !res.allowNames?.has(specifier.name))) &&
     (res.kind ? res.kind === specifier.effectiveKind : true);
 
 const reportDeclaration = (
@@ -272,7 +267,7 @@ const reportSpecifier = (
   specifier: Specifier,
   restriction: ResolvedImportRestriction
 ): ReportDescriptor => ({
-  node: restriction.importNames ? specifier.node : specifier.declaration.node,
+  node: specifier.node,
   messageId: `${
     restriction.importNames
       ? specifier.isNamespace
@@ -695,6 +690,3 @@ const maybeCastSet = <T>(arr: Maybe<Many<T>>) =>
 
 const maybe = <T, R>(val: Maybe<T>, then: (val: T) => R) =>
   val ? then(val) : undefined;
-
-const setMinus = <T>(set: ReadonlySet<T>, without: ReadonlySet<T>) =>
-  new Set([...set].filter((x) => !without.has(x)));
