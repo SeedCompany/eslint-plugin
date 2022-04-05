@@ -20,6 +20,8 @@ export type ImportRestriction = Readonly<{
   kind?: ImportKind;
   /** Limit restriction to only these names/specifiers */
   importNames?: Many<string>;
+  /** Allow these names/specifiers */
+  allowNames?: Many<string>;
   message?: string;
   replacement?: ReplacementOrFn;
 }>;
@@ -57,6 +59,7 @@ type ResolvedImportRestriction = Readonly<
       path: ReadonlySet<string>;
       pattern?: Omit<Ignore, 'add'>;
       importNames?: ReadonlySet<string>;
+      allowNames?: ReadonlySet<string>;
     }
   >
 >;
@@ -89,6 +92,7 @@ const schema: JSONSchema = {
         pattern: oneOrMoreStrings,
         kind: importKind,
         importNames: oneOrMoreStrings,
+        allowNames: oneOrMoreStrings,
         message: string,
         replacement: {}, // "any" to allow functions
       },
@@ -139,6 +143,7 @@ export const rule: ESLint.RuleModule<
                 }).add(castArray(opt.pattern))
               : undefined,
           importNames: maybeCastSet(opt.importNames),
+          allowNames: maybeCastSet(opt.allowNames),
         })
       )
       .map((opt, i) => {
@@ -221,11 +226,18 @@ const nodeChecker =
 const matchDeclarationRestriction =
   (declaration: Declaration) => (res: ResolvedImportRestriction) =>
     (!res.importNames || declaration.isExportALl) &&
+    (res.allowNames
+      ? setMinus(declaration.specifierNames, res.allowNames).size > 0
+      : true) &&
     (res.kind ? res.kind === declaration.kind : true);
 
 const matchSpecifierRestriction =
   (specifier: Specifier) => (res: ResolvedImportRestriction) =>
-    (specifier.name === '*' || res.importNames?.has(specifier.name)) &&
+    (specifier.name === '*' ||
+      (res.importNames || res.allowNames
+        ? (res.importNames?.has(specifier.name) ?? true) &&
+          !res.allowNames?.has(specifier.name)
+        : false)) &&
     (res.kind ? res.kind === specifier.kind : true);
 
 const checkDeclaration = (
@@ -646,3 +658,6 @@ const maybeCastSet = <T>(arr: Maybe<Many<T>>) =>
 
 const maybe = <T, R>(val: Maybe<T>, then: (val: T) => R) =>
   val ? then(val) : undefined;
+
+const setMinus = <T>(set: ReadonlySet<T>, without: ReadonlySet<T>) =>
+  new Set([...set].filter((x) => !without.has(x)));

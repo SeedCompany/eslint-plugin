@@ -290,6 +290,34 @@ new RuleTester().run('@seedcompany/no-restricted-imports', rule, {
       ],
     },
     {
+      code: 'import onlyDefault from "foo";',
+      options: [
+        {
+          path: 'foo',
+          allowNames: 'default',
+        },
+      ],
+    },
+    {
+      code: 'import { onlyName } from "foo";',
+      options: [
+        {
+          path: 'foo',
+          allowNames: ['onlyName'],
+        },
+      ],
+    },
+    {
+      code: 'import { good, fine } from "foo";',
+      options: [
+        {
+          path: 'foo',
+          importNames: ['bad'],
+          allowNames: ['fine'],
+        },
+      ],
+    },
+    {
       code: 'import "foo-without-restricted-specifiers";',
       options: [
         {
@@ -701,6 +729,7 @@ DisallowedObject, // eslint-disable-line
         {
           path: 'foo',
           importNames: ['default'],
+          allowNames: ['ok'],
           message:
             "Please import the default import of 'foo' from /bar/ instead.",
         },
