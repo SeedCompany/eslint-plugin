@@ -1,7 +1,7 @@
-import {
-  AST_TOKEN_TYPES,
-  type ExportAllDeclaration,
-  type StringLiteral,
+import type {
+  ExportAllDeclaration,
+  Identifier,
+  StringLiteral,
 } from '@typescript-eslint/types/dist/generated/ast-spec';
 import type { TSESTree } from '@typescript-eslint/utils';
 import type { JSONSchema4 } from '@typescript-eslint/utils/dist/json-schema';
@@ -306,18 +306,11 @@ export const noRestrictedImports: RuleModule<
             declaration.specifiers[declaration.specifiers.length - 1] === node;
 
           if (replacement.path) {
-            if (!replacement.specifier) {
-              return fixer.replaceTextRange(
-                declaration.source!.range,
-                replacement.path
-              );
-            }
-
             const newImportSpecifier =
               replacement.specifier === 'default' &&
               node.type !== 'ExportSpecifier'
                 ? node.local.name
-                : `{ ${replacement.specifier} as ${node.local.name} }`;
+                : `{ ${specifier(replacement, node.local)} }`;
             const keyword =
               node.type === 'ExportSpecifier' ? 'export' : 'import';
             const newStatement = `${keyword} ${newImportSpecifier} from '${replacement.path}';`;
@@ -326,12 +319,20 @@ export const noRestrictedImports: RuleModule<
               return fixer.replaceText(declaration, newStatement);
             }
 
-            const removalRange = maybeRangeOf(
-              isLast ? sourceCode.getTokenBefore(node, isComma) : node,
-              isLast
-                ? sourceCode.getTokenAfter(node, isClosingBracket)
-                : tokenAfterComma(sourceCode, node) ?? node
-            );
+            const lastNamed =
+              node.type === 'ImportSpecifier' &&
+              declaration.specifiers.length === 2 &&
+              declaration.specifiers[0]?.type === 'ImportDefaultSpecifier';
+
+            const removalRange = lastNamed
+              ? maybeRangeOf(
+                  sourceCode.getTokenBefore(node, isComma),
+                  sourceCode.getTokenAfter(node, isClosingBracket)
+                )
+              : maybeRangeOf(
+                  isLast ? sourceCode.getTokenBefore(node, isComma) : node,
+                  tokenAfterComma(sourceCode, node)
+                );
             if (!removalRange) {
               return null;
             }
@@ -347,7 +348,7 @@ export const noRestrictedImports: RuleModule<
             if (node.type === 'ExportSpecifier') {
               return fixer.replaceText(
                 node,
-                `${replacement.specifier} as ${node.local.name}`
+                specifier(replacement, node.local)
               );
             }
 
@@ -377,7 +378,7 @@ export const noRestrictedImports: RuleModule<
               }
               const removal = maybeRangeOf(
                 isLast ? sourceCode.getTokenBefore(node, isComma) : node,
-                tokenAfterComma(sourceCode, node) ?? node
+                tokenAfterComma(sourceCode, node)
               );
               if (!removal) {
                 return null;
@@ -387,16 +388,13 @@ export const noRestrictedImports: RuleModule<
                 fixer.removeRange(removal),
               ];
             } else if (oldIsDefault && onlyOne) {
-              const newSpecifier = `${replacement.specifier} as ${node.local.name}`;
+              const newSpecifier = specifier(replacement, node.local);
               return fixer.replaceText(node, `{ ${newSpecifier} }`);
             } else if (oldIsDefault) {
-              const removalRange = maybeRangeOf(
+              const removalRange = rangeOf(
                 node,
                 tokenAfterComma(sourceCode, node)
               );
-              if (!removalRange) {
-                return null;
-              }
               const removeOldDefault = fixer.removeRange(removalRange);
               const otherIsNs = declaration.specifiers.some(
                 (sp) => sp.type === 'ImportNamespaceSpecifier'
@@ -406,9 +404,9 @@ export const noRestrictedImports: RuleModule<
                   removeOldDefault,
                   fixer.insertTextAfter(
                     declaration,
-                    `\nimport { ${replacement.specifier} as ${
-                      node.local.name
-                    } } from '${declaration.source!.value}';`
+                    `\nimport { ${specifier(replacement, node.local)} } from '${
+                      declaration.source!.value
+                    }';`
                   ),
                 ];
               }
@@ -423,13 +421,12 @@ export const noRestrictedImports: RuleModule<
                 removeOldDefault,
                 fixer.insertTextAfter(
                   openingBracket,
-                  ` ${replacement.specifier} as ${node.local.name},`
+                  ` ${specifier(replacement, node.local)},`
                 ),
               ];
             }
 
-            const newSpecifier = `${replacement.specifier} as ${node.local.name}`;
-            return fixer.replaceText(node, newSpecifier);
+            return fixer.replaceText(node, specifier(replacement, node.local));
           }
 
           return [];
@@ -521,17 +518,24 @@ const resolveReplacement = (
   declaration: Declaration
 ) => {
   if (typeof replacement === 'function') {
-    return replacement({
+    const result = replacement({
       specifier: importName,
       path: declaration.source!.value,
     });
+    return {
+      path: result.path,
+      specifier: result.specifier ?? importName,
+    };
   }
   const { specifiers, ...rest } = replacement;
   return {
     ...rest,
-    specifier: specifiers?.[importName],
+    specifier: specifiers?.[importName] ?? importName,
   };
 };
+
+const specifier = ({ specifier }: { specifier: string }, local: Identifier) =>
+  specifier === local.name ? specifier : `${specifier} as ${local.name}`;
 
 const castArray = <T>(arr: T | readonly T[] | null | undefined): T[] =>
   !arr ? [] : Array.isArray(arr) ? arr : [arr];
@@ -539,16 +543,14 @@ const castArray = <T>(arr: T | readonly T[] | null | undefined): T[] =>
 const tokenAfterComma = (code: SourceCode, node: TSESTree.Node) => {
   const token = code.getTokenAfter(
     node,
-    (token) => isComma(token) || isFromKeyword(token)
+    (token) => isComma(token) || isClosingBracket(token)
   );
-  if (!token || token.value === 'from') {
-    return null;
+  if (!token || isClosingBracket(token)) {
+    return node.range[1];
   }
   return token.range[1] + (code.text[token.range[1]] === ' ' ? 1 : 0);
 };
 
-const isFromKeyword = (token: TSESTree.Comment | TSESTree.Token) =>
-  token.type === AST_TOKEN_TYPES.Keyword && token.value === 'from';
 const isComma = (token: TSESTree.Comment | TSESTree.Token) =>
   token.value === ',';
 const isOpeningBracket = (token: TSESTree.Comment | TSESTree.Token) =>

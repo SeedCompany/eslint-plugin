@@ -11,6 +11,7 @@ const imports = {
   c: ts`import * as all from 'foo';`,
   d: ts`import { bad } from 'foo';`,
   e: ts`import { bad, two } from 'foo';`,
+  l: ts`import { first, bad } from 'foo';`,
   f: ts`import def, { bad } from 'foo';`,
   g: ts`import def, * as all from 'foo';`,
   h: ts`export { bad } from 'foo';`,
@@ -38,6 +39,12 @@ const configs = {
     path: 'foo',
     importNames: ['bad'],
     replacement: { path: 'bar', specifiers: { bad: 'good' } },
+  }),
+  // name1 path1 -> name1 path2
+  h: c({
+    path: 'foo',
+    importNames: 'bad',
+    replacement: { path: 'bar' },
   }),
   // name1 -> default1
   d: c({
@@ -80,10 +87,12 @@ const cases: Case[] = [
   ['a', 'e', null, { errors: 0 }],
   ['a', 'f', null, { errors: 0 }],
   ['a', 'g', null, { errors: 0 }],
+  ['a', 'h', null, { errors: 0 }],
 
   ['b', 'a', ts`import def from 'bar';`],
   ['b', 'b', null, { errors: 0 }],
   ['b', 'c', null, { errors: 0 }],
+  ['b', 'h', null, { errors: 0 }],
   ['b', 'd', null, { errors: 0 }],
   ['b', 'e', ts`import { good as def } from 'foo';`],
   ['b', 'f', null, { errors: 0 }],
@@ -96,10 +105,12 @@ const cases: Case[] = [
   ['c', 'e', null],
   ['c', 'f', null],
   ['c', 'g', null],
+  ['c', 'h', null],
 
   ['d', 'a', ts`import { bad } from 'bar';`],
   ['d', 'b', ts`import { good as bad } from 'foo';`],
   ['d', 'c', ts`import { good as bad } from 'bar';`],
+  ['d', 'h', ts`import { bad } from 'bar';`],
   ['d', 'd', ts`import bad from 'foo';`],
   ['d', 'e', null, { errors: 0 }],
   ['d', 'f', ts`import bad from 'bar';`],
@@ -115,6 +126,14 @@ const cases: Case[] = [
       import { good as bad } from 'bar';
     `,
   ],
+  [
+    'e',
+    'h',
+    ts`
+      import { two } from 'foo';
+      import { bad } from 'bar';
+    `,
+  ],
   ['e', 'd', ts`import bad, { two } from 'foo';`],
   ['e', 'e', null, { errors: 0 }],
   [
@@ -127,6 +146,36 @@ const cases: Case[] = [
   ],
   ['e', 'g', null, { errors: 0 }],
 
+  ['l', 'a', ts`import { first, bad } from 'bar';`],
+  ['l', 'b', ts`import { first, good as bad } from 'foo';`],
+  [
+    'l',
+    'c',
+    ts`
+      import { first } from 'foo';
+      import { good as bad } from 'bar';
+    `,
+  ],
+  [
+    'l',
+    'h',
+    ts`
+      import { first } from 'foo';
+      import { bad } from 'bar';
+    `,
+  ],
+  ['l', 'd', ts`import bad, { first } from 'foo';`],
+  ['l', 'e', null, { errors: 0 }],
+  [
+    'l',
+    'f',
+    ts`
+      import { first } from 'foo';
+      import bad from 'bar';
+    `,
+  ],
+  ['l', 'g', null, { errors: 0 }],
+
   ['f', 'a', ts`import def, { bad } from 'bar';`],
   ['f', 'b', ts`import def, { good as bad } from 'foo';`],
   [
@@ -135,6 +184,14 @@ const cases: Case[] = [
     ts`
       import def from 'foo';
       import { good as bad } from 'bar';
+    `,
+  ],
+  [
+    'f',
+    'h',
+    ts`
+      import def from 'foo';
+      import { bad } from 'bar';
     `,
   ],
   ['f', 'd', null],
@@ -152,6 +209,7 @@ const cases: Case[] = [
   ['g', 'a', ts`import def, * as all from 'bar';`, { errors: 2 }],
   ['g', 'b', null],
   ['g', 'c', null],
+  ['g', 'h', null],
   ['g', 'd', null],
   [
     'g',
@@ -176,6 +234,7 @@ const cases: Case[] = [
   ['h', 'a', ts`export { bad } from 'bar';`],
   ['h', 'b', ts`export { good as bad } from 'foo';`],
   ['h', 'c', ts`export { good as bad } from 'bar';`],
+  ['h', 'h', ts`export { bad } from 'bar';`],
   ['h', 'd', ts`export { default as bad } from 'foo';`],
   ['h', 'e', null, { errors: 0 }],
   ['h', 'f', ts`export { default as bad } from 'bar';`],
@@ -189,6 +248,14 @@ const cases: Case[] = [
     ts`
       export { two } from 'foo';
       export { good as bad } from 'bar';
+    `,
+  ],
+  [
+    'i',
+    'h',
+    ts`
+      export { two } from 'foo';
+      export { bad } from 'bar';
     `,
   ],
   ['i', 'd', ts`export { default as bad, two } from 'foo';`],
@@ -210,6 +277,7 @@ const cases: Case[] = [
   ['j', 'e', null],
   ['j', 'f', null],
   ['j', 'g', null],
+  ['j', 'h', null],
 
   ['k', 'a', ts`export * as ns from 'bar';`],
   ['k', 'b', null],
@@ -218,6 +286,7 @@ const cases: Case[] = [
   ['k', 'e', null],
   ['k', 'f', null],
   ['k', 'g', null],
+  ['k', 'h', null],
 ];
 
 new RuleTester().run('@seedcompany/no-restricted-imports', rule, {
