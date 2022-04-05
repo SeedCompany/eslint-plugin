@@ -45,6 +45,7 @@
     "eslint-plugin-react-hooks": "^4.3.0",
     "ignore": "^5.2.0",
     "prettier": "^2.6.0",
+    "pupa": "^2.1.1",
     "type-fest": "^2.0.0"
   },
   "peerDependencies": {

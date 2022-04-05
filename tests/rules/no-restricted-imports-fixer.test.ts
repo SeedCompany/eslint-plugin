@@ -302,5 +302,38 @@ new RuleTester().run('@seedcompany/no-restricted-imports', rule, {
         errors: rest?.errors ?? 1,
       };
     }),
+
+    {
+      name: 'Interpolates replacement path',
+      code: ts`import Card from 'foo/macro';`,
+      options: [
+        {
+          pattern: '[a-z]*/macro',
+          replacement: {
+            path: '{path}2',
+          },
+        },
+      ],
+      errors: 1,
+      output: ts`import Card from 'foo/macro2';`,
+    },
+    {
+      name: 'Interpolates replacement specifiers & path',
+      code: ts`import Card from 'foo/macro';`,
+      options: [
+        {
+          pattern: '[a-z]*/macro',
+          importNames: 'default',
+          replacement: {
+            path: '{path}2',
+            specifiers: {
+              default: '{localName}2',
+            },
+          },
+        },
+      ],
+      errors: 1,
+      output: ts`import { Card2 as Card } from 'foo/macro2';`,
+    },
   ],
 });

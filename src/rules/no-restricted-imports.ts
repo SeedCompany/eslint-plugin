@@ -5,6 +5,7 @@ import {
 } from '@typescript-eslint/utils';
 import ignore, { type Ignore } from 'ignore';
 import type { JSONSchema4 as JSONSchema } from 'json-schema';
+import interpolate from 'pupa';
 import type { Merge } from 'type-fest';
 
 type Many<T> = T | readonly T[];
@@ -27,6 +28,7 @@ export type ReplacementOrFn =
   | Replacement
   | ((args: {
       specifier?: string;
+      localName?: string;
       path: string;
     }) => Omit<Replacement, 'specifiers'> & { specifier?: string });
 
@@ -225,12 +227,19 @@ const checkDeclaration = (
       if (!restriction.replacement) {
         return null;
       }
-      const replacement =
+      const { path } =
         typeof restriction.replacement === 'function'
           ? restriction.replacement({
               path: declaration.source.value,
             })
           : restriction.replacement!;
+      const replacement = {
+        path: maybe(path, (path) =>
+          interpolate(path, {
+            path: declaration.source.value,
+          })
+        ),
+      };
       return fixDeclaration(fixer, declaration, restriction, replacement);
     },
   };
@@ -279,6 +288,14 @@ const checkSpecifier = (
         specifier: specifiers?.[specifier.name] ?? specifier.name,
       };
     }
+    const templateData = {
+      path: specifier.source.value,
+      localName: specifier.node.local.name,
+    };
+    replacement = {
+      path: maybe(replacement.path, (path) => interpolate(path, templateData)),
+      specifier: interpolate(replacement.specifier, templateData),
+    };
     return fixSpecifier(fixer, specifier, restriction, replacement);
   },
 });
@@ -607,3 +624,6 @@ const maybeCastSet = <T>(arr: Maybe<Many<T>>) =>
   arr && (Array.isArray(arr) ? arr.length > 0 : true)
     ? new Set<T>(castArray<T>(arr))
     : undefined;
+
+const maybe = <T, R>(val: Maybe<T>, then: (val: T) => R) =>
+  val ? then(val) : undefined;
