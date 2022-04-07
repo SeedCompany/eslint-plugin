@@ -26,15 +26,20 @@ export type ImportRestriction = Readonly<{
   replacement?: ReplacementOrFn;
 }>;
 
-export type ReplacementOrFn =
-  | Replacement
-  | ((args: {
-      importName?: string;
-      localName?: string;
-      path: string;
-    }) => Omit<Replacement, 'importNames'> & { importName?: string });
+export type ReplacementOrFn = Replacement | ReplacementFn;
 
-type Replacement = Readonly<{
+export type ReplacementFn = (
+  args: ReplacementFnArgs
+) => Omit<Replacement, 'importNames'> & { importName?: string };
+export interface ReplacementFnArgs {
+  /** null if path declaration error */
+  importName: string;
+  /** null if path declaration error */
+  localName: string;
+  path: string;
+}
+
+export type Replacement = Readonly<{
   /**
    * The new replacement path
    */
@@ -212,74 +217,57 @@ const nodeChecker =
       if (!match) {
         continue;
       }
-      const des = checkSpecifier(specifier, match);
-      des && context.report(des);
+      const replacement = resolveSpecifierReplacement(specifier, match);
+      context.report({
+        ...reportSpecifier(specifier, match),
+        fix: fixSpecifier(specifier, match, replacement),
+      });
     }
 
-    if (declaration.isExportALl || !declaration.specifiers[0]?.isNamespace) {
+    if (declaration.specifiers.length === 0) {
       const match = restrictions.find(matchDeclarationRestriction(declaration));
-      const des = match && checkDeclaration(declaration, match);
-      des && context.report(des);
+      if (!match) {
+        return;
+      }
+      const replacement = resolveDeclarationReplacement(declaration, match);
+      context.report({
+        ...reportDeclaration(declaration, match),
+        fix: fixDeclaration(declaration, match, replacement),
+      });
     }
   };
 
 const matchDeclarationRestriction =
   (declaration: Declaration) => (res: ResolvedImportRestriction) =>
     (!res.importNames || declaration.isExportALl) &&
-    (res.allowNames
-      ? setMinus(declaration.specifierNames, res.allowNames).size > 0
-      : true) &&
     (res.kind ? res.kind === declaration.kind : true);
 
 const matchSpecifierRestriction =
   (specifier: Specifier) => (res: ResolvedImportRestriction) =>
     (specifier.name === '*' ||
-      (res.importNames || res.allowNames
-        ? (res.importNames?.has(specifier.name) ?? true) &&
-          !res.allowNames?.has(specifier.name)
-        : false)) &&
-    (res.kind ? res.kind === specifier.kind : true);
+      ((res.importNames?.has(specifier.name) ?? true) &&
+        !res.allowNames?.has(specifier.name))) &&
+    (res.kind ? res.kind === specifier.effectiveKind : true);
 
-const checkDeclaration = (
+const reportDeclaration = (
   declaration: Declaration,
   restriction: ResolvedImportRestriction
-): ReportDescriptor | null => {
-  return {
-    node: declaration.node,
-    messageId: `${restriction.importNames ? 'specifier' : 'path'}${
-      restriction.message ? 'WithCustomMessage' : ''
-    }`,
-    data: {
-      importSource: declaration.source.value,
-      customMessage: restriction.message,
-    },
-    fix: (fixer) => {
-      if (!restriction.replacement) {
-        return null;
-      }
-      const { path } =
-        typeof restriction.replacement === 'function'
-          ? restriction.replacement({
-              path: declaration.source.value,
-            })
-          : restriction.replacement!;
-      const replacement = {
-        path: maybe(path, (path) =>
-          interpolate(path, {
-            path: declaration.source.value,
-          })
-        ),
-      };
-      return fixDeclaration(fixer, declaration, restriction, replacement);
-    },
-  };
-};
+): ReportDescriptor => ({
+  node: declaration.node,
+  messageId: `${restriction.importNames ? 'specifier' : 'path'}${
+    restriction.message ? 'WithCustomMessage' : ''
+  }`,
+  data: {
+    importSource: declaration.source.value,
+    customMessage: restriction.message,
+  },
+});
 
-const checkSpecifier = (
+const reportSpecifier = (
   specifier: Specifier,
   restriction: ResolvedImportRestriction
-): ReportDescriptor | null => ({
-  node: restriction.importNames ? specifier.node : specifier.declaration.node,
+): ReportDescriptor => ({
+  node: specifier.node,
   messageId: `${
     restriction.importNames
       ? specifier.isNamespace
@@ -297,209 +285,254 @@ const checkSpecifier = (
         : specifier.name,
     customMessage: restriction.message,
   },
-  fix: (fixer) => {
-    if (!restriction.replacement) {
-      return null;
-    }
-    let replacement;
-    if (typeof restriction.replacement === 'function') {
-      const result = restriction.replacement({
-        importName: specifier.name,
-        path: specifier.declaration.source.value,
-      });
-      replacement = {
-        path: result.path,
-        importName: result.importName ?? specifier.name,
-      };
-    } else {
-      const { importName, importNames, ...rest } = restriction.replacement!;
-      replacement = {
-        ...rest,
-        importName:
-          importName ?? importNames?.[specifier.name] ?? specifier.name,
-      };
-    }
-    const templateData = {
-      path: specifier.source.value,
-      localName: specifier.node.local.name,
-    };
-    const interpolated = {
-      path: maybe(replacement.path, (path) => interpolate(path, templateData)),
-      importName: interpolate(replacement.importName, templateData),
-    };
-    return fixSpecifier(fixer, specifier, restriction, interpolated);
-  },
 });
 
-const fixDeclaration = (
-  fixer: ESLint.RuleFixer,
+const resolveDeclarationReplacement = (
   declaration: Declaration,
-  restriction: ResolvedImportRestriction,
-  replacement: { path?: string | undefined }
-): ReturnType<ESLint.ReportFixFunction> => {
-  if (
-    declaration.node.type === 'ExportAllDeclaration' &&
-    restriction.importNames
-  ) {
-    // Not worth trying to figure this out, namespace imports are rare anyway.
+  restriction: ResolvedImportRestriction
+) => {
+  if (!restriction.replacement) {
     return null;
   }
-
-  return replacement.path
-    ? fixer.replaceText(declaration.source, `'${replacement.path}'`)
-    : null;
+  const { path } =
+    typeof restriction.replacement === 'function'
+      ? restriction.replacement({
+          path: declaration.source.value,
+          // @ts-expect-error This arg property should be typed as nullable
+          // We leave it non-nullable, so it's easier to work with for the
+          // majority use case, which is specifiers - not declarations (this).
+          importName: undefined,
+          // @ts-expect-error This arg property should be typed as nullable
+          localName: undefined,
+        })
+      : restriction.replacement!;
+  const replacement = {
+    path: maybe(path, (path) =>
+      interpolate(path, {
+        path: declaration.source.value,
+      })
+    ),
+  };
+  return replacement;
 };
 
-const fixSpecifier = (
-  fixer: ESLint.RuleFixer,
+const resolveSpecifierReplacement = (
   specifier: Specifier,
-  restriction: ResolvedImportRestriction,
-  replacement: { path?: string | undefined; importName: string }
-): ReturnType<ESLint.ReportFixFunction> => {
-  const node = specifier.node;
-  const declaration = specifier.declaration;
-
-  if (
-    replacement.importName === 'default' &&
-    declaration.specifiers.some((s) => s.isDefault)
-  ) {
-    // Import already has default, let human fix.
+  restriction: ResolvedImportRestriction
+) => {
+  if (!restriction.replacement) {
     return null;
   }
+  let replacement;
+  if (typeof restriction.replacement === 'function') {
+    const result = restriction.replacement({
+      importName: specifier.name,
+      localName: specifier.node.local.name,
+      path: specifier.declaration.source.value,
+    });
+    replacement = {
+      path: result.path,
+      importName: result.importName ?? specifier.name,
+    };
+  } else {
+    const { importName, importNames, ...rest } = restriction.replacement!;
+    replacement = {
+      ...rest,
+      importName: importName ?? importNames?.[specifier.name] ?? specifier.name,
+    };
+  }
+  const templateData = {
+    path: specifier.source.value,
+    localName: specifier.node.local.name,
+  };
+  const interpolated = {
+    path: maybe(replacement.path, (path) => interpolate(path, templateData)),
+    importName: interpolate(replacement.importName, templateData),
+  };
+  return interpolated;
+};
 
-  if (specifier.isNamespace) {
-    if (restriction.importNames) {
-      // Not worth trying to figure this out, namespace imports are rare
-      // anyway.
+const fixDeclaration =
+  (
+    declaration: Declaration,
+    restriction: ResolvedImportRestriction,
+    replacement: Maybe<{ path?: string | undefined }>
+  ) =>
+  (fixer: ESLint.RuleFixer) => {
+    if (!replacement) {
       return null;
     }
+    if (
+      declaration.node.type === 'ExportAllDeclaration' &&
+      restriction.importNames
+    ) {
+      // Not worth trying to figure this out, namespace imports are rare anyway.
+      return null;
+    }
+
     return replacement.path
       ? fixer.replaceText(declaration.source, `'${replacement.path}'`)
       : null;
-  }
+  };
 
-  if (replacement.path) {
-    const newImportSpecifier =
-      replacement.importName === 'default' && node.type !== 'ExportSpecifier'
-        ? node.local.name
-        : `{ ${specifier.rename(replacement)} }`;
-    const keyword = specifier.isExport ? 'export' : 'import';
-    const newStatement = `${keyword} ${newImportSpecifier} from '${replacement.path}';`;
-
-    if (specifier.isOnly) {
-      return fixer.replaceText(declaration.node, newStatement);
-    }
-
-    const lastNamed =
-      node.type === 'ImportSpecifier' &&
-      declaration.specifiers.length === 2 &&
-      declaration.specifiers[0]?.node.type === 'ImportDefaultSpecifier';
-
-    const removalRange = lastNamed
-      ? maybeRangeOf(
-          specifier.getTokenBefore(ASTUtils.isCommaToken),
-          specifier.getTokenAfter(ASTUtils.isClosingBraceToken)
-        )
-      : maybeRangeOf(
-          specifier.isLast
-            ? specifier.getTokenBefore(ASTUtils.isCommaToken)
-            : node,
-          specifier.getTokenAfterComma()
-        );
-    if (!removalRange) {
+const fixSpecifier =
+  (
+    specifier: Specifier,
+    restriction: ResolvedImportRestriction,
+    replacement: Maybe<{ path?: string | undefined; importName: string }>
+  ) =>
+  (fixer: ESLint.RuleFixer) => {
+    if (!replacement) {
       return null;
     }
 
-    return [
-      fixer.removeRange(removalRange),
-      fixer.insertTextAfter(declaration.node, '\n' + newStatement),
-    ];
-  }
+    const node = specifier.node;
+    const declaration = specifier.declaration;
 
-  // No path or specifier, nothing to change.
-  if (!replacement.importName) {
-    return null;
-  }
-
-  const newIsDefault = replacement.importName === 'default';
-
-  if (specifier.isExport) {
-    return fixer.replaceText(node, specifier.rename(replacement));
-  }
-
-  if (specifier.isOnly && newIsDefault) {
-    const newSpecifier = node.local.name;
-
-    const openingBracket = specifier.getTokenBefore(
-      ASTUtils.isOpeningBraceToken
-    );
-    const closingBracket = specifier.getTokenAfter(
-      ASTUtils.isClosingBraceToken
-    );
-    const brackets = maybeRangeOf(openingBracket, closingBracket);
-    if (!brackets) {
+    if (
+      replacement.importName === 'default' &&
+      !specifier.isDefault &&
+      declaration.specifiers.some((s) => s !== specifier && s.isDefault)
+    ) {
+      // Import already has default, let human fix.
       return null;
     }
-    return fixer.replaceTextRange(brackets, newSpecifier);
-  } else if (newIsDefault) {
-    const openingBracket = specifier.getTokenBefore(
-      ASTUtils.isOpeningBraceToken
-    );
-    if (!openingBracket) {
+
+    if (specifier.isNamespace) {
+      if (restriction.importNames) {
+        // Not worth trying to figure this out, namespace imports are rare
+        // anyway.
+        return null;
+      }
+      return replacement.path
+        ? fixer.replaceText(declaration.source, `'${replacement.path}'`)
+        : null;
+    }
+
+    if (replacement.path) {
+      const newImportSpecifier =
+        replacement.importName === 'default' && node.type !== 'ExportSpecifier'
+          ? node.local.name
+          : `{ ${specifier.rename(replacement)} }`;
+      const keyword = specifier.isExport ? 'export' : 'import';
+      const newStatement = `${keyword} ${newImportSpecifier} from '${replacement.path}';`;
+
+      if (specifier.isOnly) {
+        return fixer.replaceText(declaration.node, newStatement);
+      }
+
+      const lastNamed =
+        node.type === 'ImportSpecifier' &&
+        declaration.specifiers.length === 2 &&
+        declaration.specifiers[0]?.node.type === 'ImportDefaultSpecifier';
+
+      const removalRange = lastNamed
+        ? maybeRangeOf(
+            specifier.getTokenBefore(ASTUtils.isCommaToken),
+            specifier.getTokenAfter(ASTUtils.isClosingBraceToken)
+          )
+        : maybeRangeOf(
+            specifier.isLast
+              ? specifier.getTokenBefore(ASTUtils.isCommaToken)
+              : node,
+            specifier.getTokenAfterComma()
+          );
+      if (!removalRange) {
+        return null;
+      }
+
+      return [
+        fixer.removeRange(removalRange),
+        fixer.insertTextAfter(declaration.node, '\n' + newStatement),
+      ];
+    }
+
+    // No path or specifier, nothing to change.
+    if (!replacement.importName) {
       return null;
     }
-    const removal = maybeRangeOf(
-      specifier.isLast ? specifier.getTokenBefore(ASTUtils.isCommaToken) : node,
-      specifier.getTokenAfterComma()
-    );
-    if (!removal) {
-      return null;
+
+    const newIsDefault = replacement.importName === 'default';
+
+    if (specifier.isExport) {
+      return fixer.replaceText(node, specifier.rename(replacement));
     }
-    return [
-      fixer.insertTextBefore(openingBracket, node.local.name + ', '),
-      fixer.removeRange(removal),
-    ];
-  } else if (specifier.isDefault && specifier.isOnly) {
-    return fixer.replaceText(node, `{ ${specifier.rename(replacement)} }`);
-  } else if (specifier.isDefault) {
-    const removalRange = rangeOf(node, specifier.getTokenAfterComma());
-    const removeOldDefault = fixer.removeRange(removalRange);
-    const otherIsNs = declaration.specifiers.some((sp) => sp.isNamespace);
-    if (otherIsNs) {
+
+    if (specifier.isOnly && newIsDefault) {
+      const newSpecifier = node.local.name;
+
+      const openingBracket = specifier.getTokenBefore(
+        ASTUtils.isOpeningBraceToken
+      );
+      const closingBracket = specifier.getTokenAfter(
+        ASTUtils.isClosingBraceToken
+      );
+      const brackets = maybeRangeOf(openingBracket, closingBracket);
+      if (!brackets) {
+        return null;
+      }
+      return fixer.replaceTextRange(brackets, newSpecifier);
+    } else if (newIsDefault) {
+      const openingBracket = specifier.getTokenBefore(
+        ASTUtils.isOpeningBraceToken
+      );
+      if (!openingBracket) {
+        return null;
+      }
+      const removal = maybeRangeOf(
+        specifier.isLast
+          ? specifier.getTokenBefore(ASTUtils.isCommaToken)
+          : node,
+        specifier.getTokenAfterComma()
+      );
+      if (!removal) {
+        return null;
+      }
+      return [
+        fixer.insertTextBefore(openingBracket, node.local.name + ', '),
+        fixer.removeRange(removal),
+      ];
+    } else if (specifier.isDefault && specifier.isOnly) {
+      return fixer.replaceText(node, `{ ${specifier.rename(replacement)} }`);
+    } else if (specifier.isDefault) {
+      const removalRange = rangeOf(node, specifier.getTokenAfterComma());
+      const removeOldDefault = fixer.removeRange(removalRange);
+      const otherIsNs = declaration.specifiers.some((sp) => sp.isNamespace);
+      if (otherIsNs) {
+        return [
+          removeOldDefault,
+          fixer.insertTextAfter(
+            declaration.node,
+            `\nimport { ${specifier.rename(replacement)} } from '${
+              declaration.source.value
+            }';`
+          ),
+        ];
+      }
+      const openingBracket = specifier.getTokenAfter(
+        ASTUtils.isOpeningBraceToken
+      );
+      if (!openingBracket) {
+        return null;
+      }
       return [
         removeOldDefault,
         fixer.insertTextAfter(
-          declaration.node,
-          `\nimport { ${specifier.rename(replacement)} } from '${
-            declaration.source.value
-          }';`
+          openingBracket,
+          ` ${specifier.rename(replacement)},`
         ),
       ];
     }
-    const openingBracket = specifier.getTokenAfter(
-      ASTUtils.isOpeningBraceToken
-    );
-    if (!openingBracket) {
-      return null;
-    }
-    return [
-      removeOldDefault,
-      fixer.insertTextAfter(
-        openingBracket,
-        ` ${specifier.rename(replacement)},`
-      ),
-    ];
-  }
 
-  return fixer.replaceText(node, specifier.rename(replacement));
-};
+    return fixer.replaceText(node, specifier.rename(replacement));
+  };
 
 class Specifier {
   readonly name: string;
   constructor(
     readonly node: SpecifierNode,
     /** Declaration kind taken into account here as opposed to AST */
-    readonly kind: ImportKind,
+    readonly effectiveKind: ImportKind,
     readonly declaration: Declaration
   ) {
     this.name =
@@ -658,6 +691,3 @@ const maybeCastSet = <T>(arr: Maybe<Many<T>>) =>
 
 const maybe = <T, R>(val: Maybe<T>, then: (val: T) => R) =>
   val ? then(val) : undefined;
-
-const setMinus = <T>(set: ReadonlySet<T>, without: ReadonlySet<T>) =>
-  new Set([...set].filter((x) => !without.has(x)));

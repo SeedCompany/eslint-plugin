@@ -17,7 +17,7 @@ const imports = {
   k: ts`export * as ns from 'foo';`,
 };
 
-const c = <T extends ImportRestriction>(t: T) => t;
+const c = (t: ImportRestriction) => t;
 
 const configs = {
   // path1 -> path2
@@ -113,7 +113,19 @@ const cases: Case[] = [
   ['d', 'f', ts`import bad from 'bar';`],
   ['d', 'g', null, { errors: 0 }],
 
-  ['e', 'a', ts`import { bad, two } from 'bar';`],
+  [
+    'e',
+    'a',
+    /*
+      Should be: import { bad, two } from 'bar';
+      But it takes multiple passes to fix, which the tester does not do for some reason.
+     */
+    ts`
+      import { two } from 'foo';
+      import { bad } from 'bar';
+    `,
+    { errors: 2 },
+  ],
   ['e', 'b', ts`import { good as bad, two } from 'foo';`],
   [
     'e',
@@ -143,7 +155,19 @@ const cases: Case[] = [
   ],
   ['e', 'g', null, { errors: 0 }],
 
-  ['l', 'a', ts`import { first, bad } from 'bar';`],
+  [
+    'l',
+    'a',
+    /*
+      Should be: import { first, bad } from 'bar';
+      But it takes multiple passes to fix, which the tester does not do for some reason.
+     */
+    ts`
+      import { bad } from 'foo';
+      import { first } from 'bar';
+    `,
+    { errors: 2 },
+  ],
   ['l', 'b', ts`import { first, good as bad } from 'foo';`],
   [
     'l',
@@ -173,7 +197,19 @@ const cases: Case[] = [
   ],
   ['l', 'g', null, { errors: 0 }],
 
-  ['f', 'a', ts`import def, { bad } from 'bar';`],
+  [
+    'f',
+    'a',
+    /*
+      Should be: import def, { bad } from 'bar';
+      But it takes multiple passes to fix, which the tester does not do for some reason.
+     */
+    ts`
+      import { bad } from 'foo';
+      import def from 'bar';
+    `,
+    { errors: 2 },
+  ],
   ['f', 'b', ts`import def, { good as bad } from 'foo';`],
   [
     'f',
@@ -203,7 +239,19 @@ const cases: Case[] = [
     `,
   ],
 
-  ['g', 'a', ts`import def, * as all from 'bar';`, { errors: 2 }],
+  [
+    'g',
+    'a',
+    /*
+      Should be: import def, * as all from 'bar';
+      But it takes multiple passes to fix, which the tester does not do for some reason.
+     */
+    ts`
+      import * as all from 'foo';
+      import def from 'bar';
+    `,
+    { errors: 2 },
+  ],
   ['g', 'b', null],
   ['g', 'c', null],
   ['g', 'h', null],
@@ -237,7 +285,19 @@ const cases: Case[] = [
   ['h', 'f', ts`export { default as bad } from 'bar';`],
   ['h', 'g', null, { errors: 0 }],
 
-  ['i', 'a', ts`export { bad, two } from 'bar';`],
+  [
+    'i',
+    'a',
+    /*
+      Should be: export { bad, two } from 'bar';
+      But it takes multiple passes to fix, which the tester does not do for some reason.
+     */
+    ts`
+      export { two } from 'foo';
+      export { bad } from 'bar';
+    `,
+    { errors: 2 },
+  ],
   ['i', 'b', ts`export { good as bad, two } from 'foo';`],
   [
     'i',
@@ -326,11 +386,25 @@ new RuleTester().run('@seedcompany/no-restricted-imports', rule, {
           importNames: 'default',
           replacement: {
             path: '{path}2',
-            importNames: {
-              default: '{localName}2',
-            },
+            importName: '{localName}2',
           },
         },
+      ],
+      errors: 1,
+      output: ts`import { Card2 as Card } from 'foo/macro2';`,
+    },
+    {
+      name: 'Interpolates replacement specifiers & path from replacement fn',
+      code: ts`import Card from 'foo/macro';`,
+      options: [
+        c({
+          pattern: '[a-z]*/macro',
+          importNames: 'default',
+          replacement: ({ path, localName }) => ({
+            path: `${path}2`,
+            importName: `${localName}2`,
+          }),
+        }),
       ],
       errors: 1,
       output: ts`import { Card2 as Card } from 'foo/macro2';`,
