@@ -391,7 +391,8 @@ const fixSpecifier =
 
     if (
       replacement.importName === 'default' &&
-      declaration.specifiers.some((s) => s.isDefault)
+      !specifier.isDefault &&
+      declaration.specifiers.some((s) => s !== specifier && s.isDefault)
     ) {
       // Import already has default, let human fix.
       return null;
