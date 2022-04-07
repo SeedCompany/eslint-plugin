@@ -12,6 +12,9 @@ export const config: Linter.Config = {
     jest: true,
     node: true,
   },
+  parserOptions: {
+    jsxPragma: null,
+  },
   settings: {
     react: {
       version: 'detect',
