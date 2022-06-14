@@ -52,6 +52,7 @@ export const config: Linter.Config = {
     'react/jsx-no-comment-textnodes': 'error',
     'react/jsx-no-constructed-context-values': 'error',
     'react/jsx-no-target-blank': 'warn',
+    'react/jsx-no-useless-fragment': ['warn', { allowExpressions: true }],
     'react/no-find-dom-node': 'error',
     'react/no-render-return-value': 'error',
     'react/no-string-refs': 'error',
