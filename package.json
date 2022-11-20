@@ -70,7 +70,7 @@
     "@types/common-tags": "^1.8.1",
     "@types/eslint": "^8.4.3",
     "@types/jest": "^27.4.1",
-    "@types/node": "^17.0.42",
+    "@types/node": "^18.0.0",
     "@typescript-eslint/types": "^5.28.0",
     "common-tags": "^1.8.2",
     "husky": "^4.3.8",
