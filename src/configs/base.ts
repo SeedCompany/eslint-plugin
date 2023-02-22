@@ -236,10 +236,6 @@ export const config: Linter.Config = {
     'no-restricted-syntax': [
       'error',
       {
-        selector: 'ForStatement',
-        message: 'Use a for..of loop instead. They are more concise.',
-      },
-      {
         selector: 'ForInStatement',
         message:
           'for..in loops iterate over the entire prototype chain, which is virtually never what you want.\n ' +
